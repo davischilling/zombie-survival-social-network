@@ -29,4 +29,16 @@ describe('Abstract Controller', () => {
       data: error,
     })
   })
+
+  it('should return 500 if perform throws', async () => {
+    const error = new Error('perform_error')
+    jest.spyOn(sut, 'perform').mockRejectedValueOnce(error)
+
+    const httpResponse = await sut.handle('any_value')
+
+    expect(httpResponse).toEqual({
+      statusCode: 500,
+      data: error,
+    })
+  })
 })
