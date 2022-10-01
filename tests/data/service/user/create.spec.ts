@@ -1,4 +1,4 @@
-import { IIdGenerator } from '@/data/contracts'
+import { IIdGenerator, IRepository } from '@/data/contracts'
 import User from '@/data/entities/user'
 import { CreateUserService } from '@/data/services/user'
 import { SexEnumTypes } from '@/domain/models'
@@ -6,11 +6,12 @@ import {
   CreateUserDTOType,
   ICreateUserService,
 } from '@/domain/use-cases/user/create'
-import { mock } from 'jest-mock-extended'
+import { mock, MockProxy } from 'jest-mock-extended'
 
 jest.mock('@/data/entities/user')
 
-describe('Create User', () => {
+describe('Create User Service', () => {
+  let userRepo: MockProxy<IRepository>
   let createUserDTO: CreateUserDTOType
   let idGenerator: IIdGenerator
   let sut: ICreateUserService
@@ -25,11 +26,12 @@ describe('Create User', () => {
         longitude: 0,
       },
     }
+    userRepo = mock()
     idGenerator = mock()
   })
 
   beforeEach(() => {
-    sut = new CreateUserService(idGenerator)
+    sut = new CreateUserService(idGenerator, userRepo)
   })
 
   it('Should call entityName class constructor with correct params', async () => {
@@ -37,5 +39,14 @@ describe('Create User', () => {
 
     expect(User).toHaveBeenCalledWith(createUserDTO, idGenerator)
     expect(User).toHaveBeenCalledTimes(1)
+  })
+
+  it('should call userRepo.create with correct params', async () => {
+    await sut.handle(createUserDTO)
+
+    const userEntity = new User(createUserDTO, idGenerator)
+
+    expect(userRepo.create).toHaveBeenCalledWith(userEntity)
+    expect(userRepo.create).toHaveBeenCalledTimes(1)
   })
 })
