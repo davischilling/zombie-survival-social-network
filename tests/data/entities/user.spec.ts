@@ -1,27 +1,33 @@
 import User, { IIdGenerator } from '@/data/entities/user'
 import { SexTypes, UserModel } from '@/domain/models'
+import { faker } from '@faker-js/faker'
 import { mock, MockProxy } from 'jest-mock-extended'
 
 describe('Share', () => {
+  let generatedId: string
   let idGeneratorMock: MockProxy<IIdGenerator>
   let userModelMock: UserModel
   let sut: User
 
   beforeAll(() => {
     userModelMock = {
-      id: 'id',
-      name: '',
-      age: 0,
+      id: faker.datatype.uuid(),
+      name: faker.name.fullName(),
+      age: faker.datatype.number({
+        min: 10,
+        max: 50,
+      }),
       sex: SexTypes.male,
       location: {
-        latitude: 0,
-        longitude: 0,
+        latitude: Number(faker.address.latitude()),
+        longitude: Number(faker.address.longitude()),
       },
-      isInfected: false,
+      isInfected: faker.datatype.boolean(),
       itens: [],
     }
+    generatedId = faker.datatype.uuid()
     idGeneratorMock = mock()
-    idGeneratorMock.perform.mockReturnValue('new_id')
+    idGeneratorMock.perform.mockReturnValue(generatedId)
   })
 
   it('should fill the attrs on the constructor with correct params', () => {
@@ -40,11 +46,15 @@ describe('Share', () => {
 
   it('should update an user correctly', () => {
     sut = new User(userModelMock, idGeneratorMock)
-    sut.id = 'any_user_id'
 
-    sut.name = 'updated_name'
+    const anyId = faker.datatype.uuid()
+    const anyName = faker.name.fullName()
+
+    sut.id = anyId
+    sut.name = anyName
+
     const updatedUser = new User(
-      { ...sut, ...{ name: 'updated_name' } },
+      { ...sut, ...{ name: anyName } },
       idGeneratorMock
     )
 
@@ -57,7 +67,7 @@ describe('Share', () => {
     sut = new User(userWithNoId, idGeneratorMock)
 
     expect(idGeneratorMock.perform).toHaveBeenCalledTimes(1)
-    expect(sut.id).toBe('new_id')
+    expect(sut.id).toBe(generatedId)
   })
 
   it('should not call idGenerator.perfom if id was passed to the constructor', () => {
