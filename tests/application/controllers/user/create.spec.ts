@@ -42,4 +42,13 @@ describe('Create User Controller', () => {
 
     await expect(promise).rejects.toThrow(new Error('service_error'))
   })
+
+  it('should return 201 and entityName confirmation message on success', async () => {
+    const httpResponse = await sut.perform(createUserDTO)
+
+    expect(httpResponse).toEqual({
+      statusCode: 201,
+      data: { message: 'User created' },
+    })
+  })
 })
