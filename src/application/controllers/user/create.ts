@@ -9,8 +9,8 @@ export class CreateUserController extends Controller {
   async perform(httpRequest: any): Promise<HttpResponse<any>> {
     await this.createUserService.handle(httpRequest)
     return {
-      statusCode: 200,
-      data: {},
+      statusCode: 201,
+      data: { message: 'User created' },
     }
   }
 }
