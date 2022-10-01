@@ -51,12 +51,18 @@ describe('Share', () => {
     expect(updatedUser).toEqual(sut)
   })
 
-  it('should call idGenerator if id was not passed returning a valid id', () => {
+  it('should call idGenerator.perfom if id was not passed returning a valid id', () => {
     const { id, ...userWithNoId } = userModelMock
 
     sut = new User(userWithNoId, idGeneratorMock)
 
     expect(idGeneratorMock.perform).toHaveBeenCalledTimes(1)
     expect(sut.id).toBe('new_id')
+  })
+
+  it('should not call idGenerator.perfom if id was passed to the constructor', () => {
+    sut = new User(userModelMock, idGeneratorMock)
+
+    expect(idGeneratorMock.perform).toHaveBeenCalledTimes(0)
   })
 })
