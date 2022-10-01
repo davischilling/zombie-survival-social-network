@@ -1,4 +1,5 @@
-import User, { IIdGenerator } from '@/data/entities/user'
+import { IIdGenerator } from '@/data/contracts'
+import User from '@/data/entities/user'
 import { UserModel } from '@/domain/models'
 import { faker } from '@faker-js/faker'
 import { mock, MockProxy } from 'jest-mock-extended'
