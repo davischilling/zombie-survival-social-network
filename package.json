@@ -4,7 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "ts-node-dev --poll --respawn --transpile-only --ignore-watch node_modules --clear -r dotenv/config src/server.ts"
+    "dev": "ts-node-dev --poll --respawn --transpile-only --ignore-watch node_modules --clear -r dotenv/config src/server.ts",
+    "lint": "eslint src --ext .tsx,.ts",
+    "lint:fix": "eslint src tests --ext .tsx,.ts --fix"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.1.2",
@@ -12,10 +14,20 @@
     "@types/express": "^4.17.14",
     "@types/module-alias": "^2.0.1",
     "@types/node": "^18.7.23",
+    "@typescript-eslint/eslint-plugin": "^5.38.1",
+    "@typescript-eslint/parser": "^5.38.1",
     "commitizen": "^4.2.5",
     "cz-conventional-changelog": "3.3.0",
     "dotenv": "^16.0.3",
+    "eslint": "^7.21.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-import-resolver-typescript": "^3.5.1",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-import-helpers": "^1.2.1",
+    "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.1",
+    "prettier": "^2.7.1",
     "ts-node-dev": "^2.0.0",
     "typescript": "^4.8.4"
   },

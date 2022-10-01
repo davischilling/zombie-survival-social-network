@@ -1,6 +1,6 @@
 import './config/module-alias'
-import { Express } from 'express'
 import { app } from '@/config/app'
+import { Express } from 'express'
 
 const start = async (app: Express): Promise<void> => {
   const port = process.env.PORT
