@@ -7,6 +7,7 @@ describe('Share', () => {
 
   beforeEach(() => {
     userModelMock = {
+      id: 'id',
       name: '',
       age: 0,
       sex: SexTypes.male,
@@ -23,5 +24,13 @@ describe('Share', () => {
     sut = new User(userModelMock)
 
     expect(sut).toEqual(userModelMock)
+  })
+
+  it('should define a new id for the entity if it was not passed to the constructor', () => {
+    const { id, ...userWithNoId } = userModelMock
+
+    sut = new User(userWithNoId)
+
+    expect(sut.id).toBeDefined()
   })
 })
