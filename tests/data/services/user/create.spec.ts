@@ -1,11 +1,11 @@
 import { IIdGenerator, IRepository } from '@/data/contracts'
 import User from '@/data/entities/user'
 import { CreateUserService } from '@/data/services/user'
-import { SexEnumTypes } from '@/domain/models'
 import {
   CreateUserDTOType,
   ICreateUserService,
 } from '@/domain/use-cases/user/create'
+import { faker } from '@faker-js/faker'
 import { mock, MockProxy } from 'jest-mock-extended'
 
 jest.mock('@/data/entities/user')
@@ -18,12 +18,15 @@ describe('Create User Service', () => {
 
   beforeAll(() => {
     createUserDTO = {
-      name: '',
-      age: 0,
-      sex: SexEnumTypes.male,
+      name: faker.name.fullName(),
+      age: faker.datatype.number({
+        min: 10,
+        max: 50,
+      }),
+      sex: faker.name.sexType(),
       location: {
-        latitude: 0,
-        longitude: 0,
+        latitude: Number(faker.address.latitude()),
+        longitude: Number(faker.address.longitude()),
       },
     }
     userRepo = mock()
