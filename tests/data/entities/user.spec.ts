@@ -23,7 +23,7 @@ describe('Share', () => {
         longitude: Number(faker.address.longitude()),
       },
       isInfected: faker.datatype.boolean(),
-      itens: [],
+      items: [],
     }
     generatedId = faker.datatype.uuid()
     idGeneratorMock = mock()
@@ -42,6 +42,15 @@ describe('Share', () => {
     sut = new User(userWithNoId, idGeneratorMock)
 
     expect(sut.id).toBeDefined()
+  })
+
+  it('should define isInffected and items with default value if not passed to the constructor', () => {
+    const { isInfected, items, ...userWithNoIsInffected } = userModelMock
+
+    sut = new User(userWithNoIsInffected, idGeneratorMock)
+
+    expect(sut.isInfected).toBeDefined()
+    expect(sut.items).toBeDefined()
   })
 
   it('should update an user correctly', () => {
