@@ -41,4 +41,10 @@ describe('Abstract Controller', () => {
       data: error,
     })
   })
+
+  it('should return same result as perform', async () => {
+    const httpResponse = await sut.handle('any_value')
+
+    expect(httpResponse).toEqual(sut.result)
+  })
 })
