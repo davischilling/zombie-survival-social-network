@@ -4,7 +4,7 @@ import { UserModel } from '@/domain/models'
 import { faker } from '@faker-js/faker'
 import { mock, MockProxy } from 'jest-mock-extended'
 
-describe('Share', () => {
+describe('User Entity', () => {
   let generatedId: string
   let idGeneratorMock: MockProxy<IIdGenerator>
   let userModelMock: UserModel
