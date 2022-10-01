@@ -33,4 +33,14 @@ describe('Share', () => {
 
     expect(sut.id).toBeDefined()
   })
+
+  it('should update an user correctly', () => {
+    sut = new User(userModelMock)
+    sut.id = 'any_user_id'
+
+    sut.name = 'updated_name'
+    const updatedUser = new User({ ...sut, ...{ name: 'updated_name' } })
+
+    expect(updatedUser).toEqual(sut)
+  })
 })
