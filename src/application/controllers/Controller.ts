@@ -8,11 +8,7 @@ export abstract class Controller {
 
   async handle(httpRequest: any): Promise<HttpResponse> {
     try {
-      await this.perform(httpRequest)
-      return {
-        statusCode: 200,
-        data: {},
-      }
+      return await this.perform(httpRequest)
     } catch (err: any) {
       if (err.message === 'not_found') {
         return {
