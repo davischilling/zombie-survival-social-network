@@ -21,6 +21,8 @@
       "prettier"
   ],
   "rules": {
+    "@typescript-eslint/no-empty-function": "off",
+    "import/no-extraneous-dependencies": "off",
     "no-underscore-dangle": "off",
     "@typescript-eslint/no-namespace": "off",
     "@typescript-eslint/no-explicit-any": "off",
@@ -64,10 +66,6 @@
         "groups": ["module", "/^@shared/", ["parent", "sibling", "index"]],
         "alphabetize": { "order": "asc", "ignoreCase": true }
       }
-    ],
-    "import/no-extraneous-dependencies": [
-      "error",
-      { "devDependencies": ["**/*.spec.js"] }
     ]
   },
   "settings": {
