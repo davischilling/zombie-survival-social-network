@@ -37,7 +37,7 @@ describe('Create User Service', () => {
     sut = new CreateUserService(idGenerator, userRepo)
   })
 
-  it('Should call entityName class constructor with correct params', async () => {
+  it('Should call User class constructor with correct params', async () => {
     await sut.handle(createUserDTO)
 
     expect(User).toHaveBeenCalledWith(createUserDTO, idGenerator)
