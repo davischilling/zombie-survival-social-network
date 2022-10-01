@@ -9,5 +9,7 @@ export const adaptExpressRoute: Adapter = (controller) => async (req, res) => {
     ...req.query,
     ...req.params,
   })
-  res.status(statusCode).json(data)
+  const json =
+    statusCode >= 200 && statusCode < 300 ? data : { error: data.message }
+  res.status(statusCode).json(json)
 }
