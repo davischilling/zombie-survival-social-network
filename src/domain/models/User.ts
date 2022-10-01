@@ -25,6 +25,6 @@ export type UserModel = {
   age: number
   sex: SexTypes
   location: LocationType
-  itens: ItemTypes[]
+  items: ItemTypes[]
   isInfected: boolean
 }
