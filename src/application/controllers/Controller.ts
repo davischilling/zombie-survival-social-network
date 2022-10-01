@@ -22,7 +22,7 @@ export abstract class Controller {
       }
       return {
         statusCode: 500,
-        data: {},
+        data: err,
       }
     }
   }
