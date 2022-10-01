@@ -1,5 +1,5 @@
 import User, { IIdGenerator } from '@/data/entities/user'
-import { SexTypes, UserModel } from '@/domain/models'
+import { UserModel } from '@/domain/models'
 import { faker } from '@faker-js/faker'
 import { mock, MockProxy } from 'jest-mock-extended'
 
@@ -17,7 +17,7 @@ describe('Share', () => {
         min: 10,
         max: 50,
       }),
-      sex: SexTypes.male,
+      sex: faker.name.sexType(),
       location: {
         latitude: Number(faker.address.latitude()),
         longitude: Number(faker.address.longitude()),
