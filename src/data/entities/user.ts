@@ -1,10 +1,7 @@
+import { IIdGenerator } from '@/data/contracts'
 import { ItemTypes, LocationType, SexTypes, UserModel } from '@/domain/models'
 
-export interface IIdGenerator {
-  perform: () => string
-}
-
-export type CreateUpdateUserModel = {
+type CreateUpdateUserModel = {
   id?: string
   name: string
   age: number
