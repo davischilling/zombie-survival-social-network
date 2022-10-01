@@ -4,17 +4,27 @@ export interface IIdGenerator {
   perform: () => string
 }
 
+export type CreateUpdateUserModel = {
+  id?: string
+  name: string
+  age: number
+  sex: SexTypes
+  location: LocationType
+  items?: ItemTypes[]
+  isInfected?: boolean
+}
+
 class User implements UserModel {
   id?: string
   name: string
   age: number
   sex: SexTypes
   location: LocationType
-  itens: ItemTypes[]
+  items: ItemTypes[]
   isInfected: boolean
 
   constructor(
-    { id, name, age, sex, location, isInfected, itens }: UserModel,
+    { id, name, age, sex, location, isInfected, items }: CreateUpdateUserModel,
     idGenerator: IIdGenerator
   ) {
     if (!id) {
@@ -22,12 +32,20 @@ class User implements UserModel {
     } else {
       this.id = id
     }
+    if (!isInfected) {
+      this.isInfected = false
+    } else {
+      this.isInfected = isInfected
+    }
+    if (!items) {
+      this.items = []
+    } else {
+      this.items = items
+    }
     this.name = name
     this.age = age
     this.sex = sex
     this.location = location
-    this.isInfected = isInfected
-    this.itens = itens
   }
 }
 
