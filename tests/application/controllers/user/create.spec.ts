@@ -34,4 +34,12 @@ describe('Create User Controller', () => {
     expect(createUserService.handle).toHaveBeenCalledWith(createUserDTO)
     expect(createUserService.handle).toHaveBeenCalledTimes(1)
   })
+
+  it('should rethrow if createUserService.handle throws', async () => {
+    createUserService.handle.mockRejectedValueOnce(new Error('service_error'))
+
+    const promise = sut.perform(createUserDTO)
+
+    await expect(promise).rejects.toThrow(new Error('service_error'))
+  })
 })
