@@ -1,5 +1,9 @@
 import { ItemTypes, LocationType, SexTypes, UserModel } from '@/domain/models'
 
+export interface IIdGenerator {
+  perform: () => string
+}
+
 class User implements UserModel {
   id?: string
   name: string
@@ -9,9 +13,12 @@ class User implements UserModel {
   itens: ItemTypes[]
   isInfected: boolean
 
-  constructor({ id, name, age, sex, location, isInfected, itens }: UserModel) {
+  constructor(
+    { id, name, age, sex, location, isInfected, itens }: UserModel,
+    idGenerator: IIdGenerator
+  ) {
     if (!id) {
-      this.id = 'new_id'
+      this.id = idGenerator.perform()
     } else {
       this.id = id
     }
