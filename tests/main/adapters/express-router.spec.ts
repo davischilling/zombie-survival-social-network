@@ -64,4 +64,18 @@ describe('ExpressRouter Adapter', () => {
     expect(res.json).toHaveBeenCalledWith({ error: 'ctrl_error' })
     expect(res.json).toHaveBeenCalledTimes(1)
   })
+
+  it('should respond with 500 and correct error', async () => {
+    controller.handle.mockResolvedValueOnce({
+      statusCode: 500,
+      data: new Error('ctrl_error'),
+    })
+
+    await sut(req, res, next)
+
+    expect(res.status).toHaveBeenCalledWith(500)
+    expect(res.status).toHaveBeenCalledTimes(1)
+    expect(res.json).toHaveBeenCalledWith({ error: 'ctrl_error' })
+    expect(res.json).toHaveBeenCalledTimes(1)
+  })
 })
