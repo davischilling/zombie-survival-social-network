@@ -49,4 +49,12 @@ describe('Create User Service', () => {
     expect(userRepo.create).toHaveBeenCalledWith(userEntity)
     expect(userRepo.create).toHaveBeenCalledTimes(1)
   })
+
+  it('should rethrow if userRepo.create throws', async () => {
+    userRepo.create.mockRejectedValueOnce(new Error('repo_error'))
+
+    const promise = sut.handle(createUserDTO)
+
+    await expect(promise).rejects.toThrow(new Error('repo_error'))
+  })
 })
