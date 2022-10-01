@@ -1,5 +1,5 @@
-import './config/module-alias'
-import { app } from '@/config/app'
+import './main/config/module-alias'
+import { app } from '@/main/config/app'
 import { Express } from 'express'
 
 const start = async (app: Express): Promise<void> => {
