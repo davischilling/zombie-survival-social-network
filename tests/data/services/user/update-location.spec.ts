@@ -1,4 +1,4 @@
-import { IRepository } from '@/data/contracts'
+import { IIdGenerator, IRepository } from '@/data/contracts'
 import User from '@/data/entities/user'
 import { UpdateUserLocationService } from '@/data/services/user'
 import { UserModel } from '@/domain/models'
@@ -16,6 +16,7 @@ jest.mock('@/data/entities/user')
 
 describe('Update User Location', () => {
   let userRepo: MockProxy<IRepository<UserModel>>
+  let idGenerator: MockProxy<IIdGenerator>
   let updateUserLocationDTO: UpdateUserLocationUseCase.input
   let sut: IUpdateUserLocationService
   let userFound: UserModel
@@ -30,11 +31,12 @@ describe('Update User Location', () => {
     }
     userFound = generateUser()
     userRepo = mock()
+    idGenerator = mock()
     userRepo.findById.mockResolvedValue(userFound)
   })
 
   beforeEach(() => {
-    sut = new UpdateUserLocationService(userRepo)
+    sut = new UpdateUserLocationService(idGenerator, userRepo)
   })
 
   it('should call UserRepo.findById with correct params', async () => {
@@ -42,5 +44,20 @@ describe('Update User Location', () => {
 
     expect(userRepo.findById).toHaveBeenCalledWith(updateUserLocationDTO.id)
     expect(userRepo.findById).toHaveBeenCalledTimes(1)
+  })
+
+  it('Should call User class constructor', async () => {
+    await sut.handle(updateUserLocationDTO)
+
+    const { location, ...userAttrs } = userFound
+
+    expect(User).toHaveBeenCalledWith(
+      {
+        ...userAttrs,
+        location: updateUserLocationDTO.location,
+      },
+      idGenerator
+    )
+    expect(User).toHaveBeenCalledTimes(1)
   })
 })
