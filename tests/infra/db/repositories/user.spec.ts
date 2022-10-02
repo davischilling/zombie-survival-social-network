@@ -1,16 +1,13 @@
 import { UserModel } from '@/domain/models'
 import { UserRepository } from '@/infra/db/repositories'
-import LocationSchema from '@/infra/db/schemas/Location'
-import UserSchema from '@/infra/db/schemas/User'
+import { UserSchema } from '@/infra/db/schemas/User'
 import { faker } from '@faker-js/faker'
 
 jest.mock('@/infra/db/schemas/User')
-jest.mock('@/infra/db/schemas/Location')
 
 describe('User Repository', () => {
   let userModelMock: UserModel
   let fakeUserSchema: jest.Mocked<typeof UserSchema>
-  let fakeLocationSchema: jest.Mocked<typeof LocationSchema>
   let sut: UserRepository
 
   beforeAll(() => {
@@ -32,7 +29,6 @@ describe('User Repository', () => {
     fakeUserSchema = UserSchema as jest.Mocked<typeof UserSchema>
     fakeUserSchema.create.mockResolvedValue(userModelMock)
     fakeUserSchema.findAll.mockResolvedValue([])
-    fakeLocationSchema = LocationSchema as jest.Mocked<typeof LocationSchema>
   })
 
   beforeEach(() => {
@@ -42,22 +38,15 @@ describe('User Repository', () => {
   it('should create a new User and Location and return an user id', async () => {
     const id = await sut.create(userModelMock)
 
-    const { location, ...userAttrs } = userModelMock
+    const { location, id: _id, ...userAttrs } = userModelMock
 
-    expect(fakeUserSchema.create).toHaveBeenCalledWith(userAttrs, {
-      fields: ['id', 'name', 'age', 'sex', 'items', 'isInfected'],
+    expect(fakeUserSchema.create).toHaveBeenCalledWith({
+      _id,
+      ...userAttrs,
+      ...location,
     })
     expect(fakeUserSchema.create).toHaveBeenCalledTimes(1)
 
-    const { latitude, longitude } = location
-
-    expect(fakeLocationSchema.create).toHaveBeenCalledWith(
-      { latitude, longitude },
-      {
-        fields: ['latitude', 'longitude'],
-      }
-    )
-    expect(fakeLocationSchema.create).toHaveBeenCalledTimes(1)
     expect(id).toBe(userModelMock.id)
   })
 
@@ -67,7 +56,6 @@ describe('User Repository', () => {
     await sut.find({ name })
 
     expect(fakeUserSchema.findAll).toHaveBeenCalledWith({
-      attributes: ['id', 'name', 'age', 'sex', 'items', 'isInfected'],
       where: { name },
     })
     expect(fakeUserSchema.findAll).toHaveBeenCalledTimes(1)
