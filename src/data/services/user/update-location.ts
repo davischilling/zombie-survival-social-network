@@ -24,5 +24,6 @@ export class UpdateUserLocationService implements IUpdateUserLocationService {
       },
       this.idGenerator
     )
+    await this.userRepo.findByIdAndUpdate(id, updatedUser)
   }
 }
