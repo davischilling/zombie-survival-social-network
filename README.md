@@ -1,0 +1,1 @@
+docker run --name zssn_postgresql -p 5432:5432 -e POSTGRES_PASSWORD=admin -e POSTGRES_USER=admin -d postgres

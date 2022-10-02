@@ -54,6 +54,9 @@
     "express": "^4.18.1",
     "express-async-errors": "^3.1.1",
     "module-alias": "^2.2.2",
+    "pg": "^8.8.0",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.23.2",
     "swagger-ui-express": "^4.5.0"
   }
 }
