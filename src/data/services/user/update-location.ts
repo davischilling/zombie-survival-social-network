@@ -1,16 +1,28 @@
-import { IRepository } from '@/data/contracts'
+import { IIdGenerator, IRepository } from '@/data/contracts'
+import User from '@/data/entities/user'
 import {
   IUpdateUserLocationService,
   UpdateUserLocationUseCase,
 } from '@/domain/use-cases/user'
 
 export class UpdateUserLocationService implements IUpdateUserLocationService {
-  constructor(private readonly userRepo: IRepository) {}
+  constructor(
+    private readonly idGenerator: IIdGenerator,
+    private readonly userRepo: IRepository
+  ) {}
 
   async handle({
     id,
     location,
   }: UpdateUserLocationUseCase.input): Promise<void> {
-    await this.userRepo.findById(id)
+    const userFound = await this.userRepo.findById(id)
+    const { location: oldLocation, ...userAttrs } = userFound
+    const updatedUser = new User(
+      {
+        ...userAttrs,
+        location,
+      },
+      this.idGenerator
+    )
   }
 }
