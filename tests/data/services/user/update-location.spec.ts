@@ -60,4 +60,23 @@ describe('Update User Location', () => {
     )
     expect(User).toHaveBeenCalledTimes(1)
   })
+
+  it('should call User.findByIdAndUpdate with correct params', async () => {
+    await sut.handle(updateUserLocationDTO)
+
+    const { location, ...userAttrs } = userFound
+    const updatedUser = new User(
+      {
+        ...userAttrs,
+        location: updateUserLocationDTO.location,
+      },
+      idGenerator
+    )
+
+    expect(userRepo.findByIdAndUpdate).toHaveBeenCalledWith(
+      updateUserLocationDTO.id,
+      updatedUser
+    )
+    expect(userRepo.findByIdAndUpdate).toHaveBeenCalledTimes(1)
+  })
 })
