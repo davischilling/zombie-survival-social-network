@@ -87,4 +87,24 @@ describe('Update User Location', () => {
     )
     expect(userRepo.findByIdAndUpdate).toHaveBeenCalledTimes(1)
   })
+
+  it('should rethrow if userRepo throws', async () => {
+    userRepo.findById.mockRejectedValueOnce(new Error('findById_repo_error'))
+
+    const findByIdPromise = sut.handle(updateUserLocationDTO)
+
+    await expect(findByIdPromise).rejects.toThrow(
+      new Error('findById_repo_error')
+    )
+
+    userRepo.findByIdAndUpdate.mockRejectedValueOnce(
+      new Error('findByIdAndUpdate_repo_error')
+    )
+
+    const findByIdAndUpdatePromise = sut.handle(updateUserLocationDTO)
+
+    await expect(findByIdAndUpdatePromise).rejects.toThrow(
+      new Error('findByIdAndUpdate_repo_error')
+    )
+  })
 })
