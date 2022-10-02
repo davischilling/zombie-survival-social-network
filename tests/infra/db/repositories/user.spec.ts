@@ -20,8 +20,8 @@ describe('User Repository', () => {
       }),
       sex: faker.name.sexType(),
       location: {
-        latitude: Number(faker.address.latitude()),
-        longitude: Number(faker.address.longitude()),
+        latitude: faker.address.latitude(),
+        longitude: faker.address.longitude(),
       },
       isInfected: faker.datatype.boolean(),
       items: [],

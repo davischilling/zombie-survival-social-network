@@ -17,8 +17,8 @@ describe('Create User Controller', () => {
       }),
       sex: faker.name.sexType(),
       location: {
-        latitude: Number(faker.address.latitude()),
-        longitude: Number(faker.address.longitude()),
+        latitude: faker.address.latitude(),
+        longitude: faker.address.longitude(),
       },
     }
     createUserService = mock()

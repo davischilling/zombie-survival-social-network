@@ -25,8 +25,8 @@ describe('Create User Service', () => {
       }),
       sex: faker.name.sexType(),
       location: {
-        latitude: Number(faker.address.latitude()),
-        longitude: Number(faker.address.longitude()),
+        latitude: faker.address.latitude(),
+        longitude: faker.address.longitude(),
       },
     }
     userRepo = mock()

@@ -15,8 +15,8 @@ export enum ItemEnumTypes {
 export type ItemTypes = 'water' | 'food' | 'medicine' | 'ammunition'
 
 export type LocationType = {
-  latitude: number
-  longitude: number
+  latitude: string
+  longitude: string
 }
 
 export type UserModel = {
