@@ -16,6 +16,9 @@ export class UpdateUserLocationService implements IUpdateUserLocationService {
     location,
   }: UpdateUserLocationUseCase.input): Promise<void> {
     const userFound = await this.userRepo.findById(id)
+    if (!userFound) {
+      throw new Error('not_found')
+    }
     const { location: oldLocation, ...userAttrs } = userFound
     const updatedUser = new User(
       {
