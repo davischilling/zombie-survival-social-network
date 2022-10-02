@@ -46,6 +46,14 @@ describe('Update User Location', () => {
     expect(userRepo.findById).toHaveBeenCalledTimes(1)
   })
 
+  it('should throw if userRepo.findById does not find any collection to update', async () => {
+    userRepo.findById.mockResolvedValueOnce(null)
+
+    const promise = sut.handle(updateUserLocationDTO)
+
+    expect(promise).rejects.toThrow(new Error('not_found'))
+  })
+
   it('Should call User class constructor', async () => {
     await sut.handle(updateUserLocationDTO)
 
