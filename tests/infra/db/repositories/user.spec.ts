@@ -7,7 +7,7 @@ import { faker } from '@faker-js/faker'
 jest.mock('@/infra/db/schemas/User')
 jest.mock('@/infra/db/schemas/Location')
 
-describe('User Entity', () => {
+describe('User Repository', () => {
   let userModelMock: UserModel
   let fakeUserSchema: jest.Mocked<typeof UserSchema>
   let fakeLocationSchema: jest.Mocked<typeof LocationSchema>
@@ -38,7 +38,7 @@ describe('User Entity', () => {
     sut = new UserRepository()
   })
 
-  it('should create a new User and return an id', async () => {
+  it('should create a new User and Location and return an user id', async () => {
     const id = await sut.create(userModelMock)
 
     const { location, ...userAttrs } = userModelMock
