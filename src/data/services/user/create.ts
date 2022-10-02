@@ -1,9 +1,6 @@
 import { IIdGenerator, IRepository } from '@/data/contracts'
 import User from '@/data/entities/user'
-import {
-  CreateUserUseCase,
-  ICreateUserService,
-} from '@/domain/use-cases/user/create'
+import { CreateUserUseCase, ICreateUserService } from '@/domain/use-cases/user'
 
 export class CreateUserService implements ICreateUserService {
   constructor(
