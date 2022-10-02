@@ -19,9 +19,13 @@ export class UserRepository implements IRepository {
     return newUser.id
   }
   async find(params: any): Promise<{ items: number; data: User[] }> {
+    const users: any = await UserSchema.findAll({
+      attributes: ['id', 'name', 'age', 'sex', 'items', 'isInfected'],
+      where: { ...params },
+    })
     return {
-      items: 1,
-      data: [],
+      items: users.length,
+      data: users,
     }
   }
   async findById(id: string): Promise<User> {
