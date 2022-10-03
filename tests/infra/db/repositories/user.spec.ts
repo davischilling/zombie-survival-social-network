@@ -107,4 +107,13 @@ describe('User Repository', () => {
     expect(fakeUserSchema.update).toHaveBeenCalledTimes(1)
     expect(id).toEqual(_id)
   })
+
+  it('should call destroy with correct params', async () => {
+    await sut.findByIdAndDelete(userModelMock.id)
+
+    expect(fakeUserSchema.destroy).toHaveBeenCalledWith({
+      where: { _id: userModelMock.id },
+    })
+    expect(fakeUserSchema.destroy).toHaveBeenCalledTimes(1)
+  })
 })
