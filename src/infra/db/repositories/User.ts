@@ -22,7 +22,10 @@ export class UserRepository implements IRepository {
     }
   }
   async findById(id: string): Promise<User> {
-    return {} as User
+    const user = await UserSchema.findOne({
+      where: { _id: id },
+    })
+    return user as any
   }
   async findOneByParam(param: any): Promise<User> {
     return {} as User
