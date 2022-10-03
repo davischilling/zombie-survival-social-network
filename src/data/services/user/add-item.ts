@@ -8,7 +8,8 @@ import {
 export class AddItemToUserService implements IAddItemToUserService {
   constructor(
     private readonly idGenerator: IIdGenerator,
-    private readonly userRepo: IRepository
+    private readonly userRepo: IRepository,
+    private readonly itemRepo: IRepository
   ) {}
 
   async handle({ userId, name }: AddItemToUserUseCase.input): Promise<void> {
@@ -17,5 +18,6 @@ export class AddItemToUserService implements IAddItemToUserService {
       throw new Error('not_found')
     }
     const newItem = new Item({ userId, name }, this.idGenerator)
+    await this.itemRepo.create(newItem)
   }
 }
