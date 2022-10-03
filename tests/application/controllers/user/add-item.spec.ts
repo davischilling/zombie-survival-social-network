@@ -45,4 +45,13 @@ describe('Add Item to User Controller', () => {
 
     await expect(promise).rejects.toThrow(new Error('service_error'))
   })
+
+  it('should return 201 statusCode and add item to user confirmation message on success', async () => {
+    const httpResponse = await sut.perform(addItemToUserDTO)
+
+    expect(httpResponse).toEqual({
+      statusCode: 201,
+      data: { message: 'Item added to user with success' },
+    })
+  })
 })
