@@ -1,5 +1,5 @@
 import { IIdGenerator } from '@/data/contracts'
-import { ItemModel, ItemTypes } from '@/domain/models'
+import { ItemEnumTypes, ItemModel, ItemTypes } from '@/domain/models'
 
 export type CreateItemModel = {
   name: ItemTypes
@@ -16,6 +16,14 @@ class Item implements ItemModel {
     this.id = idGenerator.perform()
     this.name = name
     this.userId = userId
+    switch (name) {
+      case ItemEnumTypes.water: {
+        this.points = 4
+        break
+      }
+      default:
+        break
+    }
   }
 }
 
