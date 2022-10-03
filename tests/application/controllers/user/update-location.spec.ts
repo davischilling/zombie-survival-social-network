@@ -34,4 +34,14 @@ describe('Update User Location Controller', () => {
     )
     expect(updateUserLocationService.handle).toHaveBeenCalledTimes(1)
   })
+
+  it('should rethrow if updateUserLocationService.handle throws', async () => {
+    updateUserLocationService.handle.mockRejectedValueOnce(
+      new Error('service_error')
+    )
+
+    const promise = sut.perform(updateUserLocationDTO)
+
+    await expect(promise).rejects.toThrow(new Error('service_error'))
+  })
 })
