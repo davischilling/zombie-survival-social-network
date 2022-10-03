@@ -29,6 +29,7 @@ describe('User Repository', () => {
     fakeUserSchema = UserSchema as jest.Mocked<typeof UserSchema>
     fakeUserSchema.create.mockResolvedValue(userModelMock)
     fakeUserSchema.findAll.mockResolvedValue([])
+    fakeUserSchema.findOne.mockResolvedValue(userModelMock as any)
   })
 
   beforeEach(() => {
@@ -59,5 +60,17 @@ describe('User Repository', () => {
       where: { name },
     })
     expect(fakeUserSchema.findAll).toHaveBeenCalledTimes(1)
+  })
+
+  it('should call findById with correct params and return an user', async () => {
+    const id = faker.datatype.uuid()
+
+    const user = await sut.findById(id)
+
+    expect(fakeUserSchema.findOne).toHaveBeenCalledWith({
+      where: { _id: id },
+    })
+    expect(fakeUserSchema.findOne).toHaveBeenCalledTimes(1)
+    expect(user).toEqual(userModelMock)
   })
 })
