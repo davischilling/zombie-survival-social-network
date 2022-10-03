@@ -4,5 +4,5 @@ export interface IRepository<T = any> {
   findById: (id: string) => Promise<T | null>
   findOneByParam: (params: any) => Promise<T | null>
   findByIdAndUpdate: (id: string, updatedObj: any) => Promise<string>
-  findByIdAndDelete: (id: string) => Promise<string>
+  findByIdAndDelete: (id: string) => Promise<void>
 }

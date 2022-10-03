@@ -48,7 +48,9 @@ export class UserRepository implements IRepository {
     )
     return id
   }
-  async findByIdAndDelete(id: string): Promise<string> {
-    return ''
+  async findByIdAndDelete(id: string): Promise<void> {
+    await UserSchema.destroy({
+      where: { _id: id },
+    })
   }
 }
