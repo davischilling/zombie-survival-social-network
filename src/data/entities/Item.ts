@@ -29,6 +29,10 @@ class Item implements ItemModel {
         this.points = 2
         break
       }
+      case ItemEnumTypes.ammunition: {
+        this.points = 1
+        break
+      }
       default:
         break
     }
