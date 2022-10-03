@@ -9,8 +9,8 @@ export class AddItemToUserController extends Controller {
   async perform(httpRequest: any): Promise<HttpResponse<any>> {
     await this.addItemToUserService.handle(httpRequest)
     return {
-      statusCode: 200,
-      data: {},
+      statusCode: 201,
+      data: { message: 'Item added to user with success' },
     }
   }
 }

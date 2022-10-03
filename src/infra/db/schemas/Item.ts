@@ -47,4 +47,4 @@ export const ItemSchema = db.define(
 )
 
 UserSchema.hasMany(ItemSchema)
-ItemSchema.belongsTo(UserSchema)
+// ItemSchema.belongsTo(UserSchema)
