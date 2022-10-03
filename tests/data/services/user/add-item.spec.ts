@@ -82,4 +82,14 @@ describe('Add Item to User Service', () => {
       new Error('findById_repo_error')
     )
   })
+
+  it('should rethrow if itemRepo throws', async () => {
+    itemRepo.create.mockRejectedValueOnce(new Error('create_repo_error'))
+
+    const createItemPromise = sut.handle(addItemToUserDTO)
+
+    await expect(createItemPromise).rejects.toThrow(
+      new Error('create_repo_error')
+    )
+  })
 })
