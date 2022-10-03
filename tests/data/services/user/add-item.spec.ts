@@ -1,4 +1,5 @@
 import { IIdGenerator, IRepository } from '@/data/contracts'
+import Item from '@/data/entities/Item'
 import { AddItemToUserService } from '@/data/services/user'
 import { ItemEnumTypes, UserModel } from '@/domain/models'
 import {
@@ -11,7 +12,7 @@ import { mock, MockProxy } from 'jest-mock-extended'
 
 import { generateUser } from './mocks/generateUser'
 
-jest.mock('@/data/entities/user')
+jest.mock('@/data/entities/Item')
 
 describe('Add Item to User Service', () => {
   let userRepo: MockProxy<IRepository<UserModel>>
@@ -53,5 +54,12 @@ describe('Add Item to User Service', () => {
     const promise = sut.handle(addItemToUserDTO)
 
     expect(promise).rejects.toThrow(new Error('not_found'))
+  })
+
+  it('Should call Item class constructor with correct params', async () => {
+    await sut.handle(addItemToUserDTO)
+
+    expect(Item).toHaveBeenCalledWith(addItemToUserDTO, idGenerator)
+    expect(Item).toHaveBeenCalledTimes(1)
   })
 })
