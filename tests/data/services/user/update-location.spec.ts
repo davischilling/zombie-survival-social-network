@@ -14,7 +14,7 @@ import { generateUser } from './mocks/generateUser'
 
 jest.mock('@/data/entities/user')
 
-describe('Update User Location', () => {
+describe('Update User Location Service', () => {
   let userRepo: MockProxy<IRepository<UserModel>>
   let idGenerator: MockProxy<IIdGenerator>
   let updateUserLocationDTO: UpdateUserLocationUseCase.input
