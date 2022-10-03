@@ -31,4 +31,12 @@ describe('Item Entity', () => {
     expect(sut.name).toEqual(itemModelMock.name)
     expect(sut.userId).toEqual(itemModelMock.userId)
   })
+
+  it('should define a new id for the entity with the idGenerator', () => {
+    sut = new Item(itemModelMock, idGeneratorMock)
+
+    expect(idGeneratorMock.perform).toHaveBeenCalledWith()
+    expect(idGeneratorMock.perform).toHaveBeenCalledTimes(1)
+    expect(sut.id).toBeDefined()
+  })
 })
