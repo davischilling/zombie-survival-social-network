@@ -72,4 +72,14 @@ describe('Add Item to User Service', () => {
     expect(itemRepo.create).toHaveBeenCalledWith(newItem)
     expect(itemRepo.create).toHaveBeenCalledTimes(1)
   })
+
+  it('should rethrow if userRepo throws', async () => {
+    userRepo.findById.mockRejectedValueOnce(new Error('findById_repo_error'))
+
+    const findByIdPromise = sut.handle(addItemToUserDTO)
+
+    await expect(findByIdPromise).rejects.toThrow(
+      new Error('findById_repo_error')
+    )
+  })
 })
