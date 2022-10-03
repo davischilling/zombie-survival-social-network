@@ -1,18 +1,11 @@
+import { ItemModel } from './Item'
+
 export enum SexEnumTypes {
   female = 'female',
   male = 'male',
 }
 
 export type SexTypes = 'female' | 'male'
-
-export enum ItemEnumTypes {
-  water = 'water',
-  food = 'food',
-  medicine = 'medicine',
-  ammunition = 'ammunition',
-}
-
-export type ItemTypes = 'water' | 'food' | 'medicine' | 'ammunition'
 
 export type LocationType = {
   latitude: string
@@ -25,6 +18,6 @@ export type UserModel = {
   age: number
   sex: SexTypes
   location: LocationType
-  items: ItemTypes[]
+  items: ItemModel[]
   isInfected: boolean
 }
