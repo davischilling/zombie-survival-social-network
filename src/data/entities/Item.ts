@@ -7,10 +7,10 @@ export type CreateItemModel = {
 }
 
 class Item implements ItemModel {
-  id!: string
-  userId!: string
-  name!: ItemTypes
-  points!: number
+  id: string
+  userId: string
+  name: ItemTypes
+  points: number
 
   constructor({ name, userId }: CreateItemModel, idGenerator: IIdGenerator) {
     this.id = idGenerator.perform()
@@ -34,6 +34,7 @@ class Item implements ItemModel {
         break
       }
       default:
+        this.points = 1
         break
     }
   }
