@@ -12,7 +12,7 @@ type CreateUpdateUserModel = {
 }
 
 class User implements UserModel {
-  id?: string
+  id: string
   name: string
   age: number
   sex: SexTypes

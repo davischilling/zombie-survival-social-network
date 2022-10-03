@@ -20,7 +20,7 @@ export type LocationType = {
 }
 
 export type UserModel = {
-  id?: string
+  id: string
   name: string
   age: number
   sex: SexTypes
