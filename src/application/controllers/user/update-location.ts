@@ -10,13 +10,9 @@ export class UpdateUserLocationController extends Controller {
 
   async perform(httpRequest: any): Promise<HttpResponse<any>> {
     await this.updateUserLocationService.handle(httpRequest)
-    // return {
-    //   statusCode: 201,
-    //   data: { message: 'User created' },
-    // }
     return {
       statusCode: 200,
-      data: {},
+      data: { message: 'Updated user location' },
     }
   }
 }
