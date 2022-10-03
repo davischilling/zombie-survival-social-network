@@ -21,6 +21,10 @@ class Item implements ItemModel {
         this.points = 4
         break
       }
+      case ItemEnumTypes.food: {
+        this.points = 3
+        break
+      }
       default:
         break
     }
