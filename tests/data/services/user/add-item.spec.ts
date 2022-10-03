@@ -46,4 +46,12 @@ describe('Add Item to User Service', () => {
     expect(userRepo.findById).toHaveBeenCalledWith(addItemToUserDTO.userId)
     expect(userRepo.findById).toHaveBeenCalledTimes(1)
   })
+
+  it('should throw if userRepo.findById does not find any collection', async () => {
+    userRepo.findById.mockResolvedValueOnce(null)
+
+    const promise = sut.handle(addItemToUserDTO)
+
+    expect(promise).rejects.toThrow(new Error('not_found'))
+  })
 })
