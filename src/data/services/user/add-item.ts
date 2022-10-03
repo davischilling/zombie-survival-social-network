@@ -1,5 +1,4 @@
 import { IIdGenerator, IRepository } from '@/data/contracts'
-import User from '@/data/entities/user'
 import {
   AddItemToUserUseCase,
   IAddItemToUserService,
@@ -12,6 +11,9 @@ export class AddItemToUserService implements IAddItemToUserService {
   ) {}
 
   async handle({ userId }: AddItemToUserUseCase.input): Promise<void> {
-    await this.userRepo.findById(userId)
+    const user = await this.userRepo.findById(userId)
+    if (!user) {
+      throw new Error('not_found')
+    }
   }
 }
