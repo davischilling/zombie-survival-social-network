@@ -17,6 +17,15 @@ export const ItemSchema = db.define(
       allowNull: false,
       unique: true,
     },
+    userId: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      references: {
+        model: 'user',
+        key: '_id',
+      },
+    },
     name: DataTypes.ENUM({
       values: [
         ItemEnumTypes.water,

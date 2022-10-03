@@ -28,19 +28,6 @@ export const UserSchema = db.define(
       allowNull: false,
       values: [SexEnumTypes.male, SexEnumTypes.female],
     },
-    items: {
-      type: DataTypes.ARRAY(
-        DataTypes.ENUM({
-          values: [
-            ItemEnumTypes.water,
-            ItemEnumTypes.medicine,
-            ItemEnumTypes.food,
-            ItemEnumTypes.ammunition,
-          ],
-        })
-      ),
-      allowNull: false,
-    },
     isInfected: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
