@@ -39,4 +39,16 @@ describe('Item Entity', () => {
     expect(idGeneratorMock.perform).toHaveBeenCalledTimes(1)
     expect(sut.id).toBeDefined()
   })
+
+  it('should define 4 points for the item if its water type', () => {
+    sut = new Item(
+      {
+        userId: faker.datatype.uuid(),
+        name: ItemEnumTypes.water,
+      },
+      idGeneratorMock
+    )
+
+    expect(sut.points).toBe(4)
+  })
 })
