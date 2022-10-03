@@ -69,7 +69,7 @@ describe('Update User Location Service', () => {
     expect(User).toHaveBeenCalledTimes(1)
   })
 
-  it('should call User.findByIdAndUpdate with correct params', async () => {
+  it('should call userRepo.findByIdAndUpdate with correct params', async () => {
     await sut.handle(updateUserLocationDTO)
 
     const { location, ...userAttrs } = userFound

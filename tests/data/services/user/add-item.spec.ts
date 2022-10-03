@@ -1,13 +1,12 @@
 import { IIdGenerator, IRepository } from '@/data/contracts'
 import Item from '@/data/entities/Item'
 import { AddItemToUserService } from '@/data/services/user'
-import { ItemEnumTypes, UserModel } from '@/domain/models'
+import { ItemEnumTypes, ItemModel, UserModel } from '@/domain/models'
 import {
   AddItemToUserUseCase,
   IAddItemToUserService,
 } from '@/domain/use-cases/user'
 import { faker } from '@faker-js/faker'
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { mock, MockProxy } from 'jest-mock-extended'
 
 import { generateUser } from './mocks/generateUser'
@@ -16,6 +15,7 @@ jest.mock('@/data/entities/Item')
 
 describe('Add Item to User Service', () => {
   let userRepo: MockProxy<IRepository<UserModel>>
+  let itemRepo: MockProxy<IRepository<ItemModel>>
   let idGenerator: MockProxy<IIdGenerator>
   let addItemToUserDTO: AddItemToUserUseCase.input
   let sut: IAddItemToUserService
@@ -33,12 +33,13 @@ describe('Add Item to User Service', () => {
     }
     userFound = generateUser()
     userRepo = mock()
+    itemRepo = mock()
     idGenerator = mock()
     userRepo.findById.mockResolvedValue(userFound)
   })
 
   beforeEach(() => {
-    sut = new AddItemToUserService(idGenerator, userRepo)
+    sut = new AddItemToUserService(idGenerator, userRepo, itemRepo)
   })
 
   it('should call UserRepo.findById with correct params', async () => {
@@ -61,5 +62,14 @@ describe('Add Item to User Service', () => {
 
     expect(Item).toHaveBeenCalledWith(addItemToUserDTO, idGenerator)
     expect(Item).toHaveBeenCalledTimes(1)
+  })
+
+  it('should call itemRepo.create with correct params', async () => {
+    await sut.handle(addItemToUserDTO)
+
+    const newItem = new Item(addItemToUserDTO, idGenerator)
+
+    expect(itemRepo.create).toHaveBeenCalledWith(newItem)
+    expect(itemRepo.create).toHaveBeenCalledTimes(1)
   })
 })
