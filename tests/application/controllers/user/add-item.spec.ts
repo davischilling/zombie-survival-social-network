@@ -35,4 +35,14 @@ describe('Add Item to User Controller', () => {
     expect(addItemToUserService.handle).toHaveBeenCalledWith(addItemToUserDTO)
     expect(addItemToUserService.handle).toHaveBeenCalledTimes(1)
   })
+
+  it('should rethrow if addItemToUserService.handle throws', async () => {
+    addItemToUserService.handle.mockRejectedValueOnce(
+      new Error('service_error')
+    )
+
+    const promise = sut.perform(addItemToUserDTO)
+
+    await expect(promise).rejects.toThrow(new Error('service_error'))
+  })
 })
