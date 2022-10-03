@@ -75,4 +75,16 @@ describe('Item Entity', () => {
 
     expect(sut.points).toBe(2)
   })
+
+  it('should define 1 points for the item if its ammunition type', () => {
+    sut = new Item(
+      {
+        userId: faker.datatype.uuid(),
+        name: ItemEnumTypes.ammunition,
+      },
+      idGeneratorMock
+    )
+
+    expect(sut.points).toBe(1)
+  })
 })
