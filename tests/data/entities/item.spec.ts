@@ -51,4 +51,16 @@ describe('Item Entity', () => {
 
     expect(sut.points).toBe(4)
   })
+
+  it('should define 3 points for the item if its food type', () => {
+    sut = new Item(
+      {
+        userId: faker.datatype.uuid(),
+        name: ItemEnumTypes.food,
+      },
+      idGeneratorMock
+    )
+
+    expect(sut.points).toBe(3)
+  })
 })
