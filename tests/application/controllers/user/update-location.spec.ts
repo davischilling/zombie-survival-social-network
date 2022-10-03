@@ -44,4 +44,13 @@ describe('Update User Location Controller', () => {
 
     await expect(promise).rejects.toThrow(new Error('service_error'))
   })
+
+  it('should return 200 statusCode and update user location confirmation message on success', async () => {
+    const httpResponse = await sut.perform(updateUserLocationDTO)
+
+    expect(httpResponse).toEqual({
+      statusCode: 200,
+      data: { message: 'Updated user location' },
+    })
+  })
 })
