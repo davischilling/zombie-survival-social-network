@@ -13,6 +13,7 @@ class Item implements ItemModel {
   points!: number
 
   constructor({ name, userId }: CreateItemModel, idGenerator: IIdGenerator) {
+    this.id = idGenerator.perform()
     this.name = name
     this.userId = userId
   }
