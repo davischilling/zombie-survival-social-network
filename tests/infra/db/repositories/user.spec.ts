@@ -30,6 +30,7 @@ describe('User Repository', () => {
     fakeUserSchema.create.mockResolvedValue(userModelMock)
     fakeUserSchema.findAll.mockResolvedValue([])
     fakeUserSchema.findOne.mockResolvedValue(userModelMock as any)
+    fakeUserSchema.update.mockResolvedValue(userModelMock.id as any)
   })
 
   beforeEach(() => {
@@ -84,5 +85,26 @@ describe('User Repository', () => {
     })
     expect(fakeUserSchema.findOne).toHaveBeenCalledTimes(1)
     expect(user).toEqual(userModelMock)
+  })
+
+  it('should call update with correct params and return the updated user id', async () => {
+    const id = await sut.findByIdAndUpdate(userModelMock.id, userModelMock)
+
+    const { id: _id, location, ...userAttrs } = userModelMock
+    const { latitude, longitude } = location
+
+    expect(fakeUserSchema.update).toHaveBeenCalledWith(
+      {
+        // _id,
+        ...userAttrs,
+        latitude,
+        longitude,
+      },
+      {
+        where: { _id },
+      }
+    )
+    expect(fakeUserSchema.update).toHaveBeenCalledTimes(1)
+    expect(id).toEqual(_id)
   })
 })
