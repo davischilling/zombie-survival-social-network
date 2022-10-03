@@ -62,13 +62,25 @@ describe('User Repository', () => {
     expect(fakeUserSchema.findAll).toHaveBeenCalledTimes(1)
   })
 
-  it('should call findById with correct params and return an user', async () => {
+  it('should call findOne with correct params and return an user', async () => {
     const id = faker.datatype.uuid()
 
     const user = await sut.findById(id)
 
     expect(fakeUserSchema.findOne).toHaveBeenCalledWith({
       where: { _id: id },
+    })
+    expect(fakeUserSchema.findOne).toHaveBeenCalledTimes(1)
+    expect(user).toEqual(userModelMock)
+  })
+
+  it('should call findByOneParam with correct params and return an user', async () => {
+    const name = faker.name.firstName()
+
+    const user = await sut.findOneByParam({ name })
+
+    expect(fakeUserSchema.findOne).toHaveBeenCalledWith({
+      where: { name },
     })
     expect(fakeUserSchema.findOne).toHaveBeenCalledTimes(1)
     expect(user).toEqual(userModelMock)
