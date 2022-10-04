@@ -21,8 +21,11 @@ export class ItemRepository implements IRepository {
   }
 
   async findByIdAndDelete(id: string): Promise<void> {
-    await ItemSchema.destroy({
+    const itemId = await ItemSchema.destroy({
       where: { _id: id },
     })
+    if (!itemId) {
+      throw new Error('not_found')
+    }
   }
 }
