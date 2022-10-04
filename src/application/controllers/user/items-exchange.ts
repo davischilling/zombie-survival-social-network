@@ -1,0 +1,16 @@
+import { Controller, HttpResponse } from '@/application/controllers/Controller'
+import { IItemsExchangeService } from '@/domain/use-cases/user'
+
+export class ItemsExchangeController extends Controller {
+  constructor(private readonly itemsExchangeService: IItemsExchangeService) {
+    super()
+  }
+
+  async perform(httpRequest: any): Promise<HttpResponse<any>> {
+    await this.itemsExchangeService.handle(httpRequest)
+    return {
+      statusCode: 200,
+      data: {},
+    }
+  }
+}
