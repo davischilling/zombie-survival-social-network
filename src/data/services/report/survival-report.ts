@@ -1,5 +1,5 @@
 import { IRepository } from '@/data/contracts'
-import { calculatePercentage } from '@/data/utils'
+import { calculateLostPoints, calculatePercentage } from '@/data/utils'
 import { calculateAverageItemPerUser } from '@/data/utils/average-item-per-user'
 import { ItemModel, UserModel } from '@/domain/models'
 import {
@@ -26,11 +26,12 @@ export class SurvivalReportService implements ISurvivalReportService {
       allUsers.data,
       itemsByUser
     )
+    const { lostPointsByInfectedUser } = calculateLostPoints(allUsers.data)
     return {
       percentageOfNonInfectedUsers,
       percentageOfInfectedUsers,
       averageItemPerUser,
-      lostPointsByInfectedUser: 0,
+      lostPointsByInfectedUser,
     }
   }
 }
