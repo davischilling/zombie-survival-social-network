@@ -48,9 +48,9 @@ describe('Survival Report Service', () => {
   it('should rethrow if userRepo.find throws', async () => {
     userRepo.find.mockRejectedValueOnce(new Error('find_repo_error'))
 
-    const findByIdPromise = sut.handle()
+    const findPromise = sut.handle()
 
-    await expect(findByIdPromise).rejects.toThrow(new Error('find_repo_error'))
+    await expect(findPromise).rejects.toThrow(new Error('find_repo_error'))
   })
 
   it('should calculate percentageOfInfectedUsers and percentageOfNonInfectedUsers correctly', async () => {
@@ -70,6 +70,14 @@ describe('Survival Report Service', () => {
     expect(itemRepo.find).toHaveBeenCalledWith({ userId: fourthUser.id })
     expect(itemRepo.find).toHaveBeenCalledWith({ userId: fifthUser.id })
     expect(itemRepo.find).toHaveBeenCalledTimes(5)
+  })
+
+  it('should rethrow if itemRepo.find throws', async () => {
+    itemRepo.find.mockRejectedValueOnce(new Error('find_repo_error'))
+
+    const findPromise = sut.handle()
+
+    await expect(findPromise).rejects.toThrow(new Error('find_repo_error'))
   })
 
   it('should calculate averageItemPerUser correctly', async () => {
