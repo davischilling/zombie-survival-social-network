@@ -18,6 +18,14 @@ export class ItemsExchangeService implements IItemsExchangeService {
     clientId,
     clientItems,
   }: ItemsExchangeUseCase.input): Promise<void> {
+    const itemsToFind: any[] = []
+    dealerItems.forEach((item) => {
+      itemsToFind.push(this.itemRepo.findById(item.id))
+    })
+    clientItems.forEach((item) => {
+      itemsToFind.push(this.itemRepo.findById(item.id))
+    })
+    const itemsFound = await Promise.all(itemsToFind)
     if (
       dealerItems.some((item) => item.userId !== dealerId) ||
       clientItems.some((item) => item.userId !== clientId)
