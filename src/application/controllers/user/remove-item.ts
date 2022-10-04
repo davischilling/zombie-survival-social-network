@@ -12,7 +12,7 @@ export class RemoveItemFromUserController extends Controller {
     await this.removeItemFromUserService.handle(httpRequest)
     return {
       statusCode: 200,
-      data: {},
+      data: { message: 'Item removed from user with success' },
     }
   }
 }
