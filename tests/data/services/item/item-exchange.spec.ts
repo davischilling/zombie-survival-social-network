@@ -105,6 +105,43 @@ describe('Items Exchange Service', () => {
     expect(promise).rejects.toThrow(new Error('invalid_item'))
   })
 
+  it('should throw invalid_item if a client item does not belong to the client', async () => {
+    const newItemsExchangeDTO = {
+      dealerId,
+      dealerItems: [
+        {
+          id: faker.datatype.uuid(),
+          name: faker.helpers.arrayElement([
+            ItemEnumTypes.water,
+            ItemEnumTypes.medicine,
+            ItemEnumTypes.food,
+            ItemEnumTypes.ammunition,
+          ]),
+          points: 4,
+          userId: dealerId,
+        },
+      ],
+      clientId,
+      clientItems: [
+        {
+          id: faker.datatype.uuid(),
+          name: faker.helpers.arrayElement([
+            ItemEnumTypes.water,
+            ItemEnumTypes.medicine,
+            ItemEnumTypes.food,
+            ItemEnumTypes.ammunition,
+          ]),
+          points: 4,
+          userId: faker.datatype.uuid(),
+        },
+      ],
+    }
+
+    const promise = sut.handle(newItemsExchangeDTO)
+
+    expect(promise).rejects.toThrow(new Error('invalid_item'))
+  })
+
   it('should call UserRepo.findById for each user passing correct params', async () => {
     await sut.handle(itemsExchangeDTO)
 
