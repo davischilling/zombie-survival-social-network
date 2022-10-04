@@ -6,7 +6,7 @@ import {
 } from '@/main/factories/controllers/item'
 import { Router } from 'express'
 
-const entityNameRoutes = async (router: Router) => {
+const itemRoutes = async (router: Router) => {
   router.post('/items/:userId', adaptCtrl(await makeAddItemToUserController()))
 
   router.delete(
@@ -20,4 +20,4 @@ const entityNameRoutes = async (router: Router) => {
   )
 }
 
-export default entityNameRoutes
+export default itemRoutes

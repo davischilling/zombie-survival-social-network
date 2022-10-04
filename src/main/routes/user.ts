@@ -6,7 +6,7 @@ import {
 } from '@/main/factories/controllers/user'
 import { Router } from 'express'
 
-const entityNameRoutes = async (router: Router) => {
+const userRoutes = async (router: Router) => {
   router.post('/users', adaptCtrl(await makeCreateUserController()))
 
   router.patch(
@@ -20,4 +20,4 @@ const entityNameRoutes = async (router: Router) => {
   )
 }
 
-export default entityNameRoutes
+export default userRoutes
