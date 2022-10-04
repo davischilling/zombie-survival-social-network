@@ -1,5 +1,6 @@
 import { IIdGenerator, IRepository } from '@/data/contracts'
 import Item from '@/data/entities/Item'
+import { ItemModel, UserModel } from '@/domain/models'
 import {
   AddItemToUserUseCase,
   IAddItemToUserService,
@@ -8,8 +9,8 @@ import {
 export class AddItemToUserService implements IAddItemToUserService {
   constructor(
     private readonly idGenerator: IIdGenerator,
-    private readonly userRepo: IRepository,
-    private readonly itemRepo: IRepository
+    private readonly userRepo: IRepository<UserModel>,
+    private readonly itemRepo: IRepository<ItemModel>
   ) {}
 
   async handle({ userId, name }: AddItemToUserUseCase.input): Promise<void> {

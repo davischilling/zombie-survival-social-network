@@ -1,5 +1,6 @@
 import { IIdGenerator, IRepository } from '@/data/contracts'
 import User from '@/data/entities/user'
+import { UserModel } from '@/domain/models'
 import {
   IUpdateUserLocationService,
   UpdateUserLocationUseCase,
@@ -8,7 +9,7 @@ import {
 export class UpdateUserLocationService implements IUpdateUserLocationService {
   constructor(
     private readonly idGenerator: IIdGenerator,
-    private readonly userRepo: IRepository
+    private readonly userRepo: IRepository<UserModel>
   ) {}
 
   async handle({
