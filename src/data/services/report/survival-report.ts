@@ -1,4 +1,5 @@
 import { IRepository } from '@/data/contracts'
+import { calculatePercentage } from '@/data/utils'
 import { ItemModel, UserModel } from '@/domain/models'
 import {
   ISurvivalReportService,
@@ -13,9 +14,11 @@ export class SurvivalReportService implements ISurvivalReportService {
 
   async handle(): Promise<SurvivalReportUseCase.output> {
     const allUsers = await this.userRepo.find({})
+    const { percentageOfNonInfectedUsers, percentageOfInfectedUsers } =
+      calculatePercentage(allUsers.data)
     return {
-      percentageOfInfectedUsers: 0,
-      percentageOfNonInfectedUsers: 0,
+      percentageOfNonInfectedUsers,
+      percentageOfInfectedUsers,
       averageItemPerUser: [],
       lostPointsByInfectedUser: 0,
     }
