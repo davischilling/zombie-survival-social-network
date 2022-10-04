@@ -1,5 +1,3 @@
-import { ItemModel } from './Item'
-
 export enum SexEnumTypes {
   female = 'female',
   male = 'male',
@@ -18,6 +16,5 @@ export type UserModel = {
   age: number
   sex: SexTypes
   location: LocationType
-  items: ItemModel[]
   isInfected: boolean
 }

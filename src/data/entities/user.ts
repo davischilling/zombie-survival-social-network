@@ -1,5 +1,5 @@
 import { IIdGenerator } from '@/data/contracts'
-import { ItemModel, LocationType, SexTypes, UserModel } from '@/domain/models'
+import { LocationType, SexTypes, UserModel } from '@/domain/models'
 
 type CreateUpdateUserModel = {
   id?: string
@@ -7,7 +7,6 @@ type CreateUpdateUserModel = {
   age: number
   sex: SexTypes
   location: LocationType
-  items?: ItemModel[]
   isInfected?: boolean
 }
 
@@ -17,11 +16,10 @@ class User implements UserModel {
   age: number
   sex: SexTypes
   location: LocationType
-  items: ItemModel[]
   isInfected: boolean
 
   constructor(
-    { id, name, age, sex, location, isInfected, items }: CreateUpdateUserModel,
+    { id, name, age, sex, location, isInfected }: CreateUpdateUserModel,
     idGenerator: IIdGenerator
   ) {
     if (!id) {
@@ -33,11 +31,6 @@ class User implements UserModel {
       this.isInfected = false
     } else {
       this.isInfected = isInfected
-    }
-    if (!items) {
-      this.items = []
-    } else {
-      this.items = items
     }
     this.name = name
     this.age = age

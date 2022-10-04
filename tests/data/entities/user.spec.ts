@@ -24,7 +24,6 @@ describe('User Entity', () => {
         longitude: faker.address.longitude(),
       },
       isInfected: faker.datatype.boolean(),
-      items: [],
     }
     generatedId = faker.datatype.uuid()
     idGeneratorMock = mock()
@@ -45,13 +44,12 @@ describe('User Entity', () => {
     expect(sut.id).toBeDefined()
   })
 
-  it('should define isInffected and items with default value if not passed to the constructor', () => {
-    const { isInfected, items, ...userWithNoIsInffected } = userModelMock
+  it('should define isInffected with default value if not passed to the constructor', () => {
+    const { isInfected, ...userWithNoIsInffected } = userModelMock
 
     sut = new User(userWithNoIsInffected, idGeneratorMock)
 
     expect(sut.isInfected).toBeDefined()
-    expect(sut.items).toBeDefined()
   })
 
   it('should update an user correctly', () => {

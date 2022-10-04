@@ -24,7 +24,6 @@ describe('User Repository', () => {
         longitude: faker.address.longitude(),
       },
       isInfected: faker.datatype.boolean(),
-      items: [],
     }
     fakeUserSchema = UserSchema as jest.Mocked<typeof UserSchema>
     fakeUserSchema.create.mockResolvedValue(userModelMock)

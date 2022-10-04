@@ -14,5 +14,4 @@ export const generateUser = (): UserModel => ({
     longitude: faker.address.longitude(),
   },
   isInfected: faker.datatype.boolean(),
-  items: [],
 })
