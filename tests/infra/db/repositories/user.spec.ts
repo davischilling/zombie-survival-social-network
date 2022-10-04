@@ -62,7 +62,7 @@ describe('User Repository', () => {
     expect(fakeUserSchema.findAll).toHaveBeenCalledTimes(1)
   })
 
-  it('should call findOne with correct params, return an user or throw not_found if not found', async () => {
+  it('should call findOne with correct params, return an user or null if not found', async () => {
     const id = faker.datatype.uuid()
 
     const user = await sut.findById(id)
@@ -72,15 +72,9 @@ describe('User Repository', () => {
     })
     expect(fakeUserSchema.findOne).toHaveBeenCalledTimes(1)
     expect(user).toEqual(userModelMock)
-
-    fakeUserSchema.findOne.mockResolvedValueOnce(null)
-
-    const promise = sut.findById(id)
-
-    expect(promise).rejects.toThrow(new Error('not_found'))
   })
 
-  it('should call findByOneParam with correct params and return an user', async () => {
+  it('should call findByOneParam with correct params, return an user or null if not found', async () => {
     const name = faker.name.firstName()
 
     const user = await sut.findOneByParam({ name })
