@@ -110,4 +110,16 @@ describe('Items Exchange Service', () => {
 
     expect(promise).rejects.toThrow(new Error('invalid_user'))
   })
+
+  it('should throw invalid_user error if client user is infected', async () => {
+    const newDealerFound = generateUser(dealerId, false)
+    const newClientFound = generateUser(clientId, true)
+
+    userRepo.findById.mockResolvedValueOnce(newDealerFound)
+    userRepo.findById.mockResolvedValueOnce(newClientFound)
+
+    const promise = sut.handle(itemsExchangeDTO)
+
+    expect(promise).rejects.toThrow(new Error('invalid_user'))
+  })
 })
