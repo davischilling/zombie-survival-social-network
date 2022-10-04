@@ -60,4 +60,14 @@ describe('Items Exchange Controller', () => {
     expect(itemsExchangeService.handle).toHaveBeenCalledWith(itemsExchangeDTO)
     expect(itemsExchangeService.handle).toHaveBeenCalledTimes(1)
   })
+
+  it('should rethrow if itemsExchangeService.handle throws', async () => {
+    itemsExchangeService.handle.mockRejectedValueOnce(
+      new Error('service_error')
+    )
+
+    const promise = sut.perform(itemsExchangeDTO)
+
+    await expect(promise).rejects.toThrow(new Error('service_error'))
+  })
 })
