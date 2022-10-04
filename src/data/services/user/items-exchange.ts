@@ -18,5 +18,8 @@ export class ItemsExchangeService implements IItemsExchangeService {
       this.userRepo.findById(dealerId),
       this.userRepo.findById(clientId),
     ])
+    if (!dealer) {
+      throw new Error('not_found')
+    }
   }
 }
