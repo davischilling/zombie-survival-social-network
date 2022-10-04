@@ -35,4 +35,16 @@ describe('Remove Item from User Service', () => {
     )
     expect(itemRepo.findByIdAndDelete).toHaveBeenCalledTimes(1)
   })
+
+  it('should rethrow if itemRepo throws', async () => {
+    itemRepo.findByIdAndDelete.mockRejectedValueOnce(
+      new Error('findById_repo_error')
+    )
+
+    const findByIdPromise = sut.handle(removeItemFromUserDTO)
+
+    await expect(findByIdPromise).rejects.toThrow(
+      new Error('findById_repo_error')
+    )
+  })
 })
