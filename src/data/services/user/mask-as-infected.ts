@@ -8,8 +8,8 @@ import {
 
 export class MarkUserAsInfectedService implements IMarkUserAsInfectedService {
   constructor(
-    private readonly userRepo: IRepository<UserModel>,
-    private readonly idGenerator: IIdGenerator
+    private readonly idGenerator: IIdGenerator,
+    private readonly userRepo: IRepository<UserModel>
   ) {}
 
   async handle({
@@ -39,9 +39,9 @@ export class MarkUserAsInfectedService implements IMarkUserAsInfectedService {
       throw new Error('invalid_user')
     }
     const { isInfected, ...userAttrs } = userToUpdate
-    const updatedUser = new User(
-      { isInfected: true, ...userAttrs },
-      this.idGenerator
-    )
+    await this.userRepo.findByIdAndUpdate(userToUpdate.id, {
+      isInfected: true,
+      ...userAttrs,
+    })
   }
 }
