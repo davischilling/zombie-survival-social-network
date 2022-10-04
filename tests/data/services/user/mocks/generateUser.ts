@@ -1,8 +1,11 @@
 import { UserModel } from '@/domain/models'
 import { faker } from '@faker-js/faker'
 
-export const generateUser = (): UserModel => ({
-  id: faker.datatype.uuid(),
+export const generateUser = (
+  id = faker.datatype.uuid(),
+  isInfected = faker.datatype.boolean()
+): UserModel => ({
+  id,
   name: faker.name.fullName(),
   age: faker.datatype.number({
     min: 10,
@@ -13,6 +16,5 @@ export const generateUser = (): UserModel => ({
     latitude: faker.address.latitude(),
     longitude: faker.address.longitude(),
   },
-  isInfected: faker.datatype.boolean(),
-  items: [],
+  isInfected,
 })
