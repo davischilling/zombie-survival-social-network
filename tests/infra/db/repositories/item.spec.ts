@@ -54,4 +54,16 @@ describe('Item Repository', () => {
 
     expect(promise).rejects.toThrow(new Error('not_found'))
   })
+
+  it('should call update with correct params and return the updated user id', async () => {
+    const id = await sut.findByIdAndUpdate(itemModelMock.id, itemModelMock)
+
+    const { id: _id, ...userAttrs } = itemModelMock
+
+    expect(fakeItemSchema.update).toHaveBeenCalledWith(userAttrs, {
+      where: { _id },
+    })
+    expect(fakeItemSchema.update).toHaveBeenCalledTimes(1)
+    expect(id).toEqual(_id)
+  })
 })
