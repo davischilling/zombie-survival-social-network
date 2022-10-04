@@ -7,10 +7,10 @@ export class SurvivalReportController extends Controller {
   }
 
   async perform(): Promise<HttpResponse<any>> {
-    await this.survivalReportService.handle()
+    const response = await this.survivalReportService.handle()
     return {
       statusCode: 200,
-      data: {},
+      data: response,
     }
   }
 }
