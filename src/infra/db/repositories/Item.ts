@@ -19,5 +19,10 @@ export class ItemRepository implements IRepository {
   async findByIdAndUpdate(id: string, updatedObj: any): Promise<string> {
     return ''
   }
-  async findByIdAndDelete(id: string): Promise<void> {}
+
+  async findByIdAndDelete(id: string): Promise<void> {
+    await ItemSchema.destroy({
+      where: { _id: id },
+    })
+  }
 }
