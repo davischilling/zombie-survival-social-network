@@ -51,4 +51,15 @@ describe('Survival Report Service', () => {
     expect(percentageOfNonInfectedUsers).toBe(40)
     expect(percentageOfInfectedUsers).toBe(60)
   })
+
+  it('should call itemRepo.find with correct params', async () => {
+    await sut.handle()
+
+    expect(itemRepo.find).toHaveBeenCalledWith({ userId: firstUser.id })
+    expect(itemRepo.find).toHaveBeenCalledWith({ userId: secondUser.id })
+    expect(itemRepo.find).toHaveBeenCalledWith({ userId: thirdUser.id })
+    expect(itemRepo.find).toHaveBeenCalledWith({ userId: fourthUser.id })
+    expect(itemRepo.find).toHaveBeenCalledWith({ userId: fifthUser.id })
+    expect(itemRepo.find).toHaveBeenCalledTimes(5)
+  })
 })
