@@ -20,4 +20,14 @@ describe('Survival Report Controller', () => {
     expect(survivalReportService.handle).toHaveBeenCalledWith()
     expect(survivalReportService.handle).toHaveBeenCalledTimes(1)
   })
+
+  it('should rethrow if survivalReportService.handle throws', async () => {
+    survivalReportService.handle.mockRejectedValueOnce(
+      new Error('service_error')
+    )
+
+    const promise = sut.perform()
+
+    await expect(promise).rejects.toThrow(new Error('service_error'))
+  })
 })
