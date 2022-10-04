@@ -64,4 +64,19 @@ describe('Mark User as infected Service', () => {
 
     await expect(promise).rejects.toThrow(new Error('repo_error'))
   })
+
+  it('should throw invalid_user if the user about to be updated is already infected', async () => {
+    userToUpdateFound = generateUser(markUserAsInfectedDTO.id, true)
+    snitchOneFound = generateUser(markUserAsInfectedDTO.snitchOneId, false)
+    snitchTwoFound = generateUser(markUserAsInfectedDTO.snitchTwoId, false)
+    snitchThreeFound = generateUser(markUserAsInfectedDTO.snitchThreeId, false)
+    userRepo.findById.mockResolvedValueOnce(userToUpdateFound)
+    userRepo.findById.mockResolvedValueOnce(snitchOneFound)
+    userRepo.findById.mockResolvedValueOnce(snitchTwoFound)
+    userRepo.findById.mockResolvedValueOnce(snitchThreeFound)
+
+    const promise = sut.handle(markUserAsInfectedDTO)
+
+    expect(promise).rejects.toThrow(new Error('invalid_user'))
+  })
 })
