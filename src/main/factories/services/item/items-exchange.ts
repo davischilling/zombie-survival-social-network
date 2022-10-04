@@ -1,5 +1,5 @@
-import { ItemsExchangeService } from '@/data/services/user'
-import { IItemsExchangeService } from '@/domain/use-cases/user'
+import { ItemsExchangeService } from '@/data/services/item'
+import { IItemsExchangeService } from '@/domain/use-cases/item'
 import {
   makeItemRepository,
   makeUserRepository,

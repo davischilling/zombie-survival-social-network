@@ -1,9 +1,9 @@
-import { ItemsExchangeController } from '@/application/controllers/user'
+import { ItemsExchangeController } from '@/application/controllers/item'
 import { ItemEnumTypes } from '@/domain/models'
 import {
   ItemsExchangeDTOType,
   IItemsExchangeService,
-} from '@/domain/use-cases/user'
+} from '@/domain/use-cases/item'
 import { faker } from '@faker-js/faker'
 import { mock, MockProxy } from 'jest-mock-extended'
 

@@ -1,10 +1,10 @@
 import { IRepository } from '@/data/contracts'
-import { ItemsExchangeService } from '@/data/services/user'
+import { ItemsExchangeService } from '@/data/services/item'
 import { ItemEnumTypes, ItemModel, UserModel } from '@/domain/models'
 import {
   IItemsExchangeService,
   ItemsExchangeDTOType,
-} from '@/domain/use-cases/user'
+} from '@/domain/use-cases/item'
 import { faker } from '@faker-js/faker'
 import { mock, MockProxy } from 'jest-mock-extended'
 

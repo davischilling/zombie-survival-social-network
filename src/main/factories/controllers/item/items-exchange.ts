@@ -1,5 +1,5 @@
-import { ItemsExchangeController } from '@/application/controllers/user'
-import { makeItemsExchangeService } from '@/main/factories/services/user'
+import { ItemsExchangeController } from '@/application/controllers/item'
+import { makeItemsExchangeService } from '@/main/factories/services/item'
 
 export const makeItemsExchangeController =
   async (): Promise<ItemsExchangeController> => {

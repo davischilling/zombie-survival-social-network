@@ -1,5 +1,5 @@
 import { Controller, HttpResponse } from '@/application/controllers/Controller'
-import { IItemsExchangeService } from '@/domain/use-cases/user'
+import { IItemsExchangeService } from '@/domain/use-cases/item'
 
 export class ItemsExchangeController extends Controller {
   constructor(private readonly itemsExchangeService: IItemsExchangeService) {

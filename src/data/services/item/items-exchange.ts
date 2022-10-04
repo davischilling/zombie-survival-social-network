@@ -4,7 +4,7 @@ import { ItemModel, UserModel } from '@/domain/models'
 import {
   IItemsExchangeService,
   ItemsExchangeUseCase,
-} from '@/domain/use-cases/user'
+} from '@/domain/use-cases/item'
 
 export class ItemsExchangeService implements IItemsExchangeService {
   constructor(
