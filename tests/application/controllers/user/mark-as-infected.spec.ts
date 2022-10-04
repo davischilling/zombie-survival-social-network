@@ -43,4 +43,13 @@ describe('Mark User As Infected Controller', () => {
 
     await expect(promise).rejects.toThrow(new Error('service_error'))
   })
+
+  it('should return 200 statusCode and return confirmation message on success', async () => {
+    const httpResponse = await sut.perform(markUserAsInfectedDTO)
+
+    expect(httpResponse).toEqual({
+      statusCode: 200,
+      data: { message: 'Marked user as infected with success' },
+    })
+  })
 })
