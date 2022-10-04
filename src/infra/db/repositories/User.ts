@@ -25,6 +25,9 @@ export class UserRepository implements IRepository {
     const user = await UserSchema.findOne({
       where: { _id: id },
     })
+    if (!user) {
+      throw new Error('not_found')
+    }
     return user as any
   }
   async findOneByParam(params: any): Promise<User> {
