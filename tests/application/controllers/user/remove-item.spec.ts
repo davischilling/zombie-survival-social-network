@@ -30,4 +30,14 @@ describe('Remove Item from User Controller', () => {
     )
     expect(removeItemFromUserService.handle).toHaveBeenCalledTimes(1)
   })
+
+  it('should rethrow if removeItemFromUserService.handle throws', async () => {
+    removeItemFromUserService.handle.mockRejectedValueOnce(
+      new Error('service_error')
+    )
+
+    const promise = sut.perform(removeItemFromUserDTO)
+
+    await expect(promise).rejects.toThrow(new Error('service_error'))
+  })
 })
