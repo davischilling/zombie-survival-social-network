@@ -1,9 +1,27 @@
 import { IRepository } from '@/data/contracts'
 import Item from '@/data/entities/Item'
-import { ItemModel } from '@/domain/models'
+import { ItemModel, ItemTypes } from '@/domain/models'
 import { ItemSchema } from '@/infra/db/schemas/Item'
 
+export type SqliteItemModel = {
+  id: number
+  _id: string
+  userId: string
+  name: ItemTypes
+  points: number
+  createdAt: Date
+  updatedAt: Date
+}
+
 export class ItemRepository implements IRepository {
+  static sqliteToDTO(params: SqliteItemModel) {
+    const { id, createdAt, updatedAt, _id, ...userAttrs } = params
+    return {
+      id: _id,
+      ...userAttrs,
+    }
+  }
+
   async create({ id: _id, ...itemAttrs }: ItemModel): Promise<string> {
     const newItem: any = await ItemSchema.create({
       _id,
@@ -16,9 +34,16 @@ export class ItemRepository implements IRepository {
     const items: any = await ItemSchema.findAll({
       where: { ...params },
     })
+    if (!items) {
+      return [] as any
+    }
+    const itemsDTO = items.map((user: any) => {
+      const { dataValues } = user
+      return ItemRepository.sqliteToDTO(dataValues)
+    })
     return {
-      items: items.length,
-      data: items,
+      items: itemsDTO.length,
+      data: itemsDTO,
     }
   }
   async findById(id: string): Promise<any> {}

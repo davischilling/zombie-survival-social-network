@@ -43,9 +43,16 @@ export class UserRepository implements IRepository {
     const users: any = await UserSchema.findAll({
       where: { ...params },
     })
+    if (!users) {
+      return [] as any
+    }
+    const usersDTO = users.map((user: any) => {
+      const { dataValues } = user
+      return UserRepository.sqliteToDTO(dataValues)
+    })
     return {
-      items: users.length,
-      data: users,
+      items: usersDTO.length,
+      data: usersDTO,
     }
   }
   async findById(id: string): Promise<User | null> {
