@@ -26,6 +26,9 @@ export class ItemsExchangeService implements IItemsExchangeService {
       itemsToFind.push(this.itemRepo.findById(item.id))
     })
     const itemsFound = await Promise.all(itemsToFind)
+    if (itemsFound.includes(null)) {
+      throw new Error('not_found')
+    }
     if (
       dealerItems.some((item) => item.userId !== dealerId) ||
       clientItems.some((item) => item.userId !== clientId)
