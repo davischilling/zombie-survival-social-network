@@ -18,6 +18,9 @@ export class ItemsExchangeService implements IItemsExchangeService {
     clientId,
     clientItems,
   }: ItemsExchangeUseCase.input): Promise<void> {
+    if (dealerItems.some((item) => item.userId !== dealerId)) {
+      throw new Error('invalid_item')
+    }
     const [dealer, client] = await Promise.all([
       this.userRepo.findById(dealerId),
       this.userRepo.findById(clientId),
