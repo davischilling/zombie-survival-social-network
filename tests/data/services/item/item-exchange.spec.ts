@@ -15,6 +15,8 @@ jest.mock('@/data/entities/user')
 describe('Items Exchange Service', () => {
   let dealerId: string
   let clientId: string
+  let dealerItem: ItemModel
+  let clientItem: ItemModel
   let dealerFound: UserModel
   let clientFound: UserModel
   let itemRepo: MockProxy<IRepository<ItemModel>>
@@ -25,41 +27,40 @@ describe('Items Exchange Service', () => {
   beforeAll(() => {
     clientId = faker.datatype.uuid()
     dealerId = faker.datatype.uuid()
-
+    dealerItem = {
+      id: faker.datatype.uuid(),
+      name: faker.helpers.arrayElement([
+        ItemEnumTypes.water,
+        ItemEnumTypes.medicine,
+        ItemEnumTypes.food,
+        ItemEnumTypes.ammunition,
+      ]),
+      points: 4,
+      userId: dealerId,
+    }
+    clientItem = {
+      id: faker.datatype.uuid(),
+      name: faker.helpers.arrayElement([
+        ItemEnumTypes.water,
+        ItemEnumTypes.medicine,
+        ItemEnumTypes.food,
+        ItemEnumTypes.ammunition,
+      ]),
+      points: 4,
+      userId: clientId,
+    }
     itemsExchangeDTO = {
       dealerId,
-      dealerItems: [
-        {
-          id: faker.datatype.uuid(),
-          name: faker.helpers.arrayElement([
-            ItemEnumTypes.water,
-            ItemEnumTypes.medicine,
-            ItemEnumTypes.food,
-            ItemEnumTypes.ammunition,
-          ]),
-          points: 4,
-          userId: dealerId,
-        },
-      ],
+      dealerItems: [dealerItem],
       clientId,
-      clientItems: [
-        {
-          id: faker.datatype.uuid(),
-          name: faker.helpers.arrayElement([
-            ItemEnumTypes.water,
-            ItemEnumTypes.medicine,
-            ItemEnumTypes.food,
-            ItemEnumTypes.ammunition,
-          ]),
-          points: 4,
-          userId: clientId,
-        },
-      ],
+      clientItems: [clientItem],
     }
     userRepo = mock()
     itemRepo = mock()
     dealerFound = generateUser(dealerId, false)
     clientFound = generateUser(clientId, false)
+    itemRepo.findById.mockResolvedValueOnce(dealerItem)
+    itemRepo.findById.mockResolvedValueOnce(clientItem)
     userRepo.findById.mockResolvedValue(dealerFound)
     userRepo.findById.mockResolvedValue(clientFound)
   })
@@ -80,7 +81,14 @@ describe('Items Exchange Service', () => {
     expect(itemRepo.findById).toHaveBeenCalledTimes(2)
   })
 
-  // it('should throw not_found error if one of the dealers item was not found', async () => {})
+  it('should throw not_found error if one of the items was not found', async () => {
+    itemRepo.findById.mockResolvedValueOnce(dealerItem)
+    itemRepo.findById.mockResolvedValueOnce(null)
+
+    const promise = sut.handle(itemsExchangeDTO)
+
+    expect(promise).rejects.toThrow(new Error('not_found'))
+  })
 
   it('should throw invalid_item if a dealer item does not belong to the dealer', async () => {
     const newItemsExchangeDTO = {
