@@ -1,5 +1,5 @@
 import { Controller, HttpResponse } from '@/application/controllers/Controller'
-import { IAddItemToUserService } from '@/domain/use-cases/user'
+import { IAddItemToUserService } from '@/domain/use-cases/item'
 
 export class AddItemToUserController extends Controller {
   constructor(private readonly addItemToUserService: IAddItemToUserService) {

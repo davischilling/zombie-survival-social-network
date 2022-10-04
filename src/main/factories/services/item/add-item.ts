@@ -1,5 +1,5 @@
-import { AddItemToUserService } from '@/data/services/user'
-import { IAddItemToUserService } from '@/domain/use-cases/user'
+import { AddItemToUserService } from '@/data/services/item'
+import { IAddItemToUserService } from '@/domain/use-cases/item'
 import { makeIdGenerator } from '@/main/factories/infra/id-generator/uuid'
 import {
   makeUserRepository,

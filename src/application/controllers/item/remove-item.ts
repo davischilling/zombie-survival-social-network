@@ -1,5 +1,5 @@
 import { Controller, HttpResponse } from '@/application/controllers/Controller'
-import { IRemoveItemFromUserService } from '@/domain/use-cases/user'
+import { IRemoveItemFromUserService } from '@/domain/use-cases/item'
 
 export class RemoveItemFromUserController extends Controller {
   constructor(

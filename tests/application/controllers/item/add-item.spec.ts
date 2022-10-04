@@ -1,9 +1,9 @@
-import { AddItemToUserController } from '@/application/controllers/user'
+import { AddItemToUserController } from '@/application/controllers/item'
 import { ItemEnumTypes } from '@/domain/models'
 import {
   AddItemToUserDTOType,
   IAddItemToUserService,
-} from '@/domain/use-cases/user'
+} from '@/domain/use-cases/item'
 import { faker } from '@faker-js/faker'
 import { mock, MockProxy } from 'jest-mock-extended'
 

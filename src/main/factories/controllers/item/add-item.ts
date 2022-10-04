@@ -1,5 +1,5 @@
-import { AddItemToUserController } from '@/application/controllers/user'
-import { makeAddItemToUserService } from '@/main/factories/services/user'
+import { AddItemToUserController } from '@/application/controllers/item'
+import { makeAddItemToUserService } from '@/main/factories/services/item'
 
 export const makeAddItemToUserController =
   async (): Promise<AddItemToUserController> => {

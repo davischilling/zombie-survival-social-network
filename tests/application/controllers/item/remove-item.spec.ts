@@ -1,8 +1,8 @@
-import { RemoveItemFromUserController } from '@/application/controllers/user'
+import { RemoveItemFromUserController } from '@/application/controllers/item'
 import {
   IRemoveItemFromUserService,
   RemoveItemFromUserDTOType,
-} from '@/domain/use-cases/user'
+} from '@/domain/use-cases/item'
 import { faker } from '@faker-js/faker'
 import { mock, MockProxy } from 'jest-mock-extended'
 

@@ -1,5 +1,5 @@
-import { RemoveItemFromUserController } from '@/application/controllers/user'
-import { makeRemoveItemFromUserService } from '@/main/factories/services/user'
+import { RemoveItemFromUserController } from '@/application/controllers/item'
+import { makeRemoveItemFromUserService } from '@/main/factories/services/item'
 
 export const makeRemoveItemFromUserController =
   async (): Promise<RemoveItemFromUserController> => {

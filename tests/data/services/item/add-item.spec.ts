@@ -1,11 +1,11 @@
 import { IIdGenerator, IRepository } from '@/data/contracts'
 import Item from '@/data/entities/Item'
-import { AddItemToUserService } from '@/data/services/user'
+import { AddItemToUserService } from '@/data/services/item'
 import { ItemEnumTypes, ItemModel, UserModel } from '@/domain/models'
 import {
   AddItemToUserUseCase,
   IAddItemToUserService,
-} from '@/domain/use-cases/user'
+} from '@/domain/use-cases/item'
 import { faker } from '@faker-js/faker'
 import { mock, MockProxy } from 'jest-mock-extended'
 

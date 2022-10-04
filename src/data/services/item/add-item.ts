@@ -3,7 +3,7 @@ import Item from '@/data/entities/Item'
 import {
   AddItemToUserUseCase,
   IAddItemToUserService,
-} from '@/domain/use-cases/user'
+} from '@/domain/use-cases/item'
 
 export class AddItemToUserService implements IAddItemToUserService {
   constructor(

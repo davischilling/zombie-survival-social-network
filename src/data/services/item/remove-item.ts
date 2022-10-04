@@ -2,7 +2,7 @@ import { IRepository } from '@/data/contracts'
 import {
   IRemoveItemFromUserService,
   RemoveItemFromUserUseCase,
-} from '@/domain/use-cases/user'
+} from '@/domain/use-cases/item'
 
 export class RemoveItemFromUserService implements IRemoveItemFromUserService {
   constructor(private readonly itemRepo: IRepository) {}

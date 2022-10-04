@@ -1,5 +1,5 @@
-import { RemoveItemFromUserService } from '@/data/services/user'
-import { IRemoveItemFromUserService } from '@/domain/use-cases/user'
+import { RemoveItemFromUserService } from '@/data/services/item'
+import { IRemoveItemFromUserService } from '@/domain/use-cases/item'
 import { makeItemRepository } from '@/main/factories/infra/repositories'
 
 export const makeRemoveItemFromUserService =
