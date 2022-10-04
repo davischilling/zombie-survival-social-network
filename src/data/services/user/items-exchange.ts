@@ -21,5 +21,8 @@ export class ItemsExchangeService implements IItemsExchangeService {
     if (!dealer || !client) {
       throw new Error('not_found')
     }
+    if (dealer.isInfected) {
+      throw new Error('invalid_user')
+    }
   }
 }
