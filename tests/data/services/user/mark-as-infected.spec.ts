@@ -1,4 +1,4 @@
-import { IRepository } from '@/data/contracts'
+import { IIdGenerator, IRepository } from '@/data/contracts'
 import User from '@/data/entities/user'
 import { MarkUserAsInfectedService } from '@/data/services/user'
 import { UserModel } from '@/domain/models'
@@ -15,6 +15,7 @@ jest.mock('@/data/entities/user')
 
 describe('Mark User as infected Service', () => {
   let userRepo: MockProxy<IRepository>
+  let idGenerator: IIdGenerator
   let markUserAsInfectedDTO: MarkUserAsInfectedDTOType
   let userToUpdateFound: UserModel
   let snitchOneFound: UserModel
@@ -30,6 +31,7 @@ describe('Mark User as infected Service', () => {
       snitchThreeId: faker.datatype.uuid(),
     }
     userRepo = mock()
+    idGenerator = mock()
     userToUpdateFound = generateUser(markUserAsInfectedDTO.id, false)
     snitchOneFound = generateUser(markUserAsInfectedDTO.snitchOneId, false)
     snitchTwoFound = generateUser(markUserAsInfectedDTO.snitchTwoId, false)
@@ -41,7 +43,7 @@ describe('Mark User as infected Service', () => {
   })
 
   beforeEach(() => {
-    sut = new MarkUserAsInfectedService(userRepo)
+    sut = new MarkUserAsInfectedService(userRepo, idGenerator)
   })
 
   it('should call UserRepo.findById with correct params', async () => {
@@ -167,5 +169,19 @@ describe('Mark User as infected Service', () => {
     const promise = sut.handle(markUserAsInfectedDTO)
 
     expect(promise).rejects.toThrow(new Error('invalid_user'))
+  })
+
+  it('Should call User class constructor with correct params', async () => {
+    userRepo.findById.mockResolvedValueOnce(userToUpdateFound)
+
+    await sut.handle(markUserAsInfectedDTO)
+
+    const { isInfected, ...userAttrs } = userToUpdateFound
+
+    expect(User).toHaveBeenCalledWith(
+      { isInfected: true, ...userAttrs },
+      idGenerator
+    )
+    expect(User).toHaveBeenCalledTimes(1)
   })
 })
