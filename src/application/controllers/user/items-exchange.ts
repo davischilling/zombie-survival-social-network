@@ -10,7 +10,7 @@ export class ItemsExchangeController extends Controller {
     await this.itemsExchangeService.handle(httpRequest)
     return {
       statusCode: 200,
-      data: {},
+      data: { message: 'Items exchange completed with success' },
     }
   }
 }
