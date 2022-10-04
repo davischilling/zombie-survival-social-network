@@ -45,6 +45,14 @@ describe('Survival Report Service', () => {
     expect(userRepo.find).toHaveBeenCalledTimes(1)
   })
 
+  it('should rethrow if userRepo.find throws', async () => {
+    userRepo.find.mockRejectedValueOnce(new Error('find_repo_error'))
+
+    const findByIdPromise = sut.handle()
+
+    await expect(findByIdPromise).rejects.toThrow(new Error('find_repo_error'))
+  })
+
   it('should calculate percentageOfInfectedUsers and percentageOfNonInfectedUsers correctly', async () => {
     const { percentageOfInfectedUsers, percentageOfNonInfectedUsers } =
       await sut.handle()
