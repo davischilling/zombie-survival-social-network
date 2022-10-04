@@ -145,4 +145,10 @@ describe('Survival Report Service', () => {
       },
     ])
   })
+
+  it('should calculate lostPointsByInfectedUser correctly', async () => {
+    const { lostPointsByInfectedUser } = await sut.handle()
+
+    expect(lostPointsByInfectedUser).toBe(3)
+  })
 })
