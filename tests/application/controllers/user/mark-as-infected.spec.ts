@@ -33,4 +33,14 @@ describe('Mark User As Infected Controller', () => {
     )
     expect(markUserAsInfectedService.handle).toHaveBeenCalledTimes(1)
   })
+
+  it('should rethrow if markUserAsInfectedService.handle throws', async () => {
+    markUserAsInfectedService.handle.mockRejectedValueOnce(
+      new Error('service_error')
+    )
+
+    const promise = sut.perform(markUserAsInfectedDTO)
+
+    await expect(promise).rejects.toThrow(new Error('service_error'))
+  })
 })
