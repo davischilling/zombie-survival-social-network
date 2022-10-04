@@ -5,6 +5,7 @@ export const apiRoutes = async (app: Express) => {
 
   ;(await import('@/main/routes/user')).default(router)
   ;(await import('@/main/routes/item')).default(router)
+  ;(await import('@/main/routes/report')).default(router)
 
   app.use(router)
 }
