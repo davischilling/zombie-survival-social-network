@@ -1,5 +1,5 @@
 import { UserModel } from '@/domain/models'
-import { UserRepository } from '@/infra/db/repositories'
+import { SqliteUserModel, UserRepository } from '@/infra/db/repositories'
 import { UserSchema } from '@/infra/db/schemas/User'
 import { faker } from '@faker-js/faker'
 
@@ -7,6 +7,7 @@ jest.mock('@/infra/db/schemas/User')
 
 describe('User Repository', () => {
   let userModelMock: UserModel
+  let sqliteResponse: SqliteUserModel
   let fakeUserSchema: jest.Mocked<typeof UserSchema>
   let sut: UserRepository
 
@@ -25,10 +26,24 @@ describe('User Repository', () => {
       },
       isInfected: faker.datatype.boolean(),
     }
+    sqliteResponse = {
+      id: 1,
+      _id: userModelMock.id,
+      name: userModelMock.name,
+      age: userModelMock.age,
+      sex: userModelMock.sex,
+      latitude: userModelMock.location.latitude,
+      longitude: userModelMock.location.longitude,
+      isInfected: userModelMock.isInfected,
+      createdAt: faker.datatype.datetime(),
+      updatedAt: faker.datatype.datetime(),
+    }
     fakeUserSchema = UserSchema as jest.Mocked<typeof UserSchema>
     fakeUserSchema.create.mockResolvedValue(userModelMock)
     fakeUserSchema.findAll.mockResolvedValue([])
-    fakeUserSchema.findOne.mockResolvedValue(userModelMock as any)
+    fakeUserSchema.findOne.mockResolvedValue({
+      dataValues: sqliteResponse,
+    } as any)
     fakeUserSchema.update.mockResolvedValue(userModelMock.id as any)
   })
 
@@ -62,7 +77,7 @@ describe('User Repository', () => {
     expect(fakeUserSchema.findAll).toHaveBeenCalledTimes(1)
   })
 
-  it('should call findOne with correct params, return an user or null if not found', async () => {
+  it('should call findOne with correct params, return an user', async () => {
     const id = faker.datatype.uuid()
 
     const user = await sut.findById(id)
@@ -74,7 +89,20 @@ describe('User Repository', () => {
     expect(user).toEqual(userModelMock)
   })
 
-  it('should call findByOneParam with correct params, return an user or null if not found', async () => {
+  it('should call findOne with correct params and null if not found', async () => {
+    const id = faker.datatype.uuid()
+    fakeUserSchema.findOne.mockResolvedValueOnce(null)
+
+    const user = await sut.findById(id)
+
+    expect(fakeUserSchema.findOne).toHaveBeenCalledWith({
+      where: { _id: id },
+    })
+    expect(fakeUserSchema.findOne).toHaveBeenCalledTimes(1)
+    expect(user).toEqual(null)
+  })
+
+  it('should call findByOneParam with correct params and return an user', async () => {
     const name = faker.name.firstName()
 
     const user = await sut.findOneByParam({ name })
@@ -84,6 +112,19 @@ describe('User Repository', () => {
     })
     expect(fakeUserSchema.findOne).toHaveBeenCalledTimes(1)
     expect(user).toEqual(userModelMock)
+  })
+
+  it('should call findByOneParam with correct params and null if not found', async () => {
+    const name = faker.name.firstName()
+    fakeUserSchema.findOne.mockResolvedValueOnce(null)
+
+    const user = await sut.findOneByParam({ name })
+
+    expect(fakeUserSchema.findOne).toHaveBeenCalledWith({
+      where: { name },
+    })
+    expect(fakeUserSchema.findOne).toHaveBeenCalledTimes(1)
+    expect(user).toEqual(null)
   })
 
   it('should call update with correct params and return the updated user id', async () => {
