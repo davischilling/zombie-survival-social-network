@@ -1,5 +1,6 @@
 import { IRepository } from '@/data/contracts'
 import { calculatePercentage } from '@/data/utils'
+import { calculateAverageItemPerUser } from '@/data/utils/average-item-per-user'
 import { ItemModel, UserModel } from '@/domain/models'
 import {
   ISurvivalReportService,
@@ -21,10 +22,14 @@ export class SurvivalReportService implements ISurvivalReportService {
       itemsByUserPromises.push(this.itemRepo.find({ userId: user.id }))
     })
     const itemsByUser = await Promise.all(itemsByUserPromises)
+    const { averageItemPerUser } = calculateAverageItemPerUser(
+      allUsers.data,
+      itemsByUser
+    )
     return {
       percentageOfNonInfectedUsers,
       percentageOfInfectedUsers,
-      averageItemPerUser: [],
+      averageItemPerUser,
       lostPointsByInfectedUser: 0,
     }
   }

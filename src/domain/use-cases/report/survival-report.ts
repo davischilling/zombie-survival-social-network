@@ -1,5 +1,5 @@
 export type UserAverageReportType = {
-  name: string
+  username: string
   averageWater: number
   averageFood: number
   averageMedicine: number
