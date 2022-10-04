@@ -1,4 +1,5 @@
-import { IRepository } from '@/data/contracts'
+import { IIdGenerator, IRepository } from '@/data/contracts'
+import User from '@/data/entities/user'
 import { UserModel } from '@/domain/models'
 import {
   IMarkUserAsInfectedService,
@@ -6,7 +7,10 @@ import {
 } from '@/domain/use-cases/user'
 
 export class MarkUserAsInfectedService implements IMarkUserAsInfectedService {
-  constructor(private readonly userRepo: IRepository<UserModel>) {}
+  constructor(
+    private readonly userRepo: IRepository<UserModel>,
+    private readonly idGenerator: IIdGenerator
+  ) {}
 
   async handle({
     id,
@@ -34,5 +38,10 @@ export class MarkUserAsInfectedService implements IMarkUserAsInfectedService {
     ) {
       throw new Error('invalid_user')
     }
+    const { isInfected, ...userAttrs } = userToUpdate
+    const updatedUser = new User(
+      { isInfected: true, ...userAttrs },
+      this.idGenerator
+    )
   }
 }
