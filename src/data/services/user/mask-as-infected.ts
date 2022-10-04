@@ -18,10 +18,13 @@ export class MarkUserAsInfectedService implements IMarkUserAsInfectedService {
     snitchTwoId,
     snitchThreeId,
   }: MarkUserAsInfectedUseCase.input): Promise<void> {
-    const userToUpdate = await this.userRepo.findById(id)
-    const snitchOneFound = await this.userRepo.findById(snitchOneId)
-    const snitchTwoFound = await this.userRepo.findById(snitchTwoId)
-    const snitchThreeFound = await this.userRepo.findById(snitchThreeId)
+    const [userToUpdate, snitchOneFound, snitchTwoFound, snitchThreeFound] =
+      await Promise.all([
+        this.userRepo.findById(id),
+        this.userRepo.findById(snitchOneId),
+        this.userRepo.findById(snitchTwoId),
+        this.userRepo.findById(snitchThreeId),
+      ])
     if (
       !userToUpdate ||
       !snitchOneFound ||
