@@ -1,4 +1,5 @@
 import { IRepository } from '@/data/contracts'
+import Item from '@/data/entities/Item'
 import { ItemModel } from '@/domain/models'
 import { ItemSchema } from '@/infra/db/schemas/Item'
 
@@ -16,8 +17,13 @@ export class ItemRepository implements IRepository {
   }
   async findById(id: string): Promise<any> {}
   async findOneByParam(params: any): Promise<any> {}
-  async findByIdAndUpdate(id: string, updatedObj: any): Promise<string> {
-    return ''
+
+  async findByIdAndUpdate(id: string, updatedObj: Item): Promise<string> {
+    const { id: _id, ...itemAttrs } = updatedObj
+    await ItemSchema.update(itemAttrs, {
+      where: { _id: id },
+    })
+    return id
   }
 
   async findByIdAndDelete(id: string): Promise<void> {
