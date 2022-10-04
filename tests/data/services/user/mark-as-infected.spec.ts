@@ -30,10 +30,10 @@ describe('Mark User as infected Service', () => {
       snitchThreeId: faker.datatype.uuid(),
     }
     userRepo = mock()
-    userToUpdateFound = generateUser(markUserAsInfectedDTO.id)
-    snitchOneFound = generateUser(markUserAsInfectedDTO.snitchOneId)
-    snitchTwoFound = generateUser(markUserAsInfectedDTO.snitchTwoId)
-    snitchThreeFound = generateUser(markUserAsInfectedDTO.snitchThreeId)
+    userToUpdateFound = generateUser(markUserAsInfectedDTO.id, false)
+    snitchOneFound = generateUser(markUserAsInfectedDTO.snitchOneId, false)
+    snitchTwoFound = generateUser(markUserAsInfectedDTO.snitchTwoId, false)
+    snitchThreeFound = generateUser(markUserAsInfectedDTO.snitchThreeId, false)
     userRepo.findById.mockResolvedValue(userToUpdateFound)
     userRepo.findById.mockResolvedValue(snitchOneFound)
     userRepo.findById.mockResolvedValue(snitchTwoFound)
@@ -65,11 +65,100 @@ describe('Mark User as infected Service', () => {
     await expect(promise).rejects.toThrow(new Error('repo_error'))
   })
 
+  it('should throw not_found if the user about to be updated was not found', async () => {
+    userRepo.findById.mockResolvedValueOnce(null)
+    userRepo.findById.mockResolvedValueOnce(snitchOneFound)
+    userRepo.findById.mockResolvedValueOnce(snitchTwoFound)
+    userRepo.findById.mockResolvedValueOnce(snitchThreeFound)
+
+    const promise = sut.handle(markUserAsInfectedDTO)
+
+    expect(promise).rejects.toThrow(new Error('not_found'))
+  })
+
+  it('should throw not_found if snitch one was not found', async () => {
+    userRepo.findById.mockResolvedValueOnce(userToUpdateFound)
+    userRepo.findById.mockResolvedValueOnce(null)
+    userRepo.findById.mockResolvedValueOnce(snitchTwoFound)
+    userRepo.findById.mockResolvedValueOnce(snitchThreeFound)
+
+    const promise = sut.handle(markUserAsInfectedDTO)
+
+    expect(promise).rejects.toThrow(new Error('not_found'))
+  })
+
+  it('should throw not_found if snitch two was not found', async () => {
+    userRepo.findById.mockResolvedValueOnce(userToUpdateFound)
+    userRepo.findById.mockResolvedValueOnce(snitchOneFound)
+    userRepo.findById.mockResolvedValueOnce(null)
+    userRepo.findById.mockResolvedValueOnce(snitchThreeFound)
+
+    const promise = sut.handle(markUserAsInfectedDTO)
+
+    expect(promise).rejects.toThrow(new Error('not_found'))
+  })
+
+  it('should throw not_found if snitch two was not found', async () => {
+    userRepo.findById.mockResolvedValueOnce(userToUpdateFound)
+    userRepo.findById.mockResolvedValueOnce(snitchOneFound)
+    userRepo.findById.mockResolvedValueOnce(snitchTwoFound)
+    userRepo.findById.mockResolvedValueOnce(null)
+
+    const promise = sut.handle(markUserAsInfectedDTO)
+
+    expect(promise).rejects.toThrow(new Error('not_found'))
+  })
+
   it('should throw invalid_user if the user about to be updated is already infected', async () => {
     userToUpdateFound = generateUser(markUserAsInfectedDTO.id, true)
     snitchOneFound = generateUser(markUserAsInfectedDTO.snitchOneId, false)
     snitchTwoFound = generateUser(markUserAsInfectedDTO.snitchTwoId, false)
     snitchThreeFound = generateUser(markUserAsInfectedDTO.snitchThreeId, false)
+    userRepo.findById.mockResolvedValueOnce(userToUpdateFound)
+    userRepo.findById.mockResolvedValueOnce(snitchOneFound)
+    userRepo.findById.mockResolvedValueOnce(snitchTwoFound)
+    userRepo.findById.mockResolvedValueOnce(snitchThreeFound)
+
+    const promise = sut.handle(markUserAsInfectedDTO)
+
+    expect(promise).rejects.toThrow(new Error('invalid_user'))
+  })
+
+  it('should throw invalid_user if snitch one is infected', async () => {
+    userToUpdateFound = generateUser(markUserAsInfectedDTO.id, false)
+    snitchOneFound = generateUser(markUserAsInfectedDTO.snitchOneId, true)
+    snitchTwoFound = generateUser(markUserAsInfectedDTO.snitchTwoId, false)
+    snitchThreeFound = generateUser(markUserAsInfectedDTO.snitchThreeId, false)
+    userRepo.findById.mockResolvedValueOnce(userToUpdateFound)
+    userRepo.findById.mockResolvedValueOnce(snitchOneFound)
+    userRepo.findById.mockResolvedValueOnce(snitchTwoFound)
+    userRepo.findById.mockResolvedValueOnce(snitchThreeFound)
+
+    const promise = sut.handle(markUserAsInfectedDTO)
+
+    expect(promise).rejects.toThrow(new Error('invalid_user'))
+  })
+
+  it('should throw invalid_user if snitch two is infected', async () => {
+    userToUpdateFound = generateUser(markUserAsInfectedDTO.id, false)
+    snitchOneFound = generateUser(markUserAsInfectedDTO.snitchOneId, false)
+    snitchTwoFound = generateUser(markUserAsInfectedDTO.snitchTwoId, true)
+    snitchThreeFound = generateUser(markUserAsInfectedDTO.snitchThreeId, false)
+    userRepo.findById.mockResolvedValueOnce(userToUpdateFound)
+    userRepo.findById.mockResolvedValueOnce(snitchOneFound)
+    userRepo.findById.mockResolvedValueOnce(snitchTwoFound)
+    userRepo.findById.mockResolvedValueOnce(snitchThreeFound)
+
+    const promise = sut.handle(markUserAsInfectedDTO)
+
+    expect(promise).rejects.toThrow(new Error('invalid_user'))
+  })
+
+  it('should throw invalid_user if snitch three is infected', async () => {
+    userToUpdateFound = generateUser(markUserAsInfectedDTO.id, false)
+    snitchOneFound = generateUser(markUserAsInfectedDTO.snitchOneId, false)
+    snitchTwoFound = generateUser(markUserAsInfectedDTO.snitchTwoId, false)
+    snitchThreeFound = generateUser(markUserAsInfectedDTO.snitchThreeId, true)
     userRepo.findById.mockResolvedValueOnce(userToUpdateFound)
     userRepo.findById.mockResolvedValueOnce(snitchOneFound)
     userRepo.findById.mockResolvedValueOnce(snitchTwoFound)
