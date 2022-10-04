@@ -19,6 +19,7 @@ describe('Item Repository', () => {
     }
     fakeItemSchema = ItemSchema as jest.Mocked<typeof ItemSchema>
     fakeItemSchema.create.mockResolvedValue(itemModelMock)
+    fakeItemSchema.findAll.mockResolvedValue([])
     fakeItemSchema.destroy.mockResolvedValue(1)
   })
 
@@ -38,6 +39,17 @@ describe('Item Repository', () => {
     expect(fakeItemSchema.create).toHaveBeenCalledTimes(1)
 
     expect(id).toBe(itemModelMock.id)
+  })
+
+  it('should call findAll with correct params and return a list of items', async () => {
+    const name = ItemEnumTypes.water
+
+    await sut.find({ name })
+
+    expect(fakeItemSchema.findAll).toHaveBeenCalledWith({
+      where: { name },
+    })
+    expect(fakeItemSchema.findAll).toHaveBeenCalledTimes(1)
   })
 
   it('should call destroy with correct params and throw not found if theres no item to delete', async () => {
