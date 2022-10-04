@@ -19,6 +19,7 @@ describe('Item Repository', () => {
     }
     fakeItemSchema = ItemSchema as jest.Mocked<typeof ItemSchema>
     fakeItemSchema.create.mockResolvedValue(itemModelMock)
+    fakeItemSchema.destroy.mockResolvedValue(1)
   })
 
   beforeEach(() => {
@@ -39,12 +40,18 @@ describe('Item Repository', () => {
     expect(id).toBe(itemModelMock.id)
   })
 
-  it('should call destroy with correct params', async () => {
+  it('should call destroy with correct params and throw not found if theres no item to delete', async () => {
     await sut.findByIdAndDelete(itemModelMock.id)
 
     expect(fakeItemSchema.destroy).toHaveBeenCalledWith({
       where: { _id: itemModelMock.id },
     })
     expect(fakeItemSchema.destroy).toHaveBeenCalledTimes(1)
+
+    fakeItemSchema.destroy.mockResolvedValueOnce(0)
+
+    const promise = sut.findByIdAndDelete(itemModelMock.id)
+
+    expect(promise).rejects.toThrow(new Error('not_found'))
   })
 })
