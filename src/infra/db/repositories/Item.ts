@@ -12,8 +12,14 @@ export class ItemRepository implements IRepository {
     return newItem.id
   }
 
-  async find(params: any): Promise<{ items: number; data: any[] }> {
-    return {} as any
+  async find(params: any): Promise<{ items: number; data: ItemModel[] }> {
+    const items: any = await ItemSchema.findAll({
+      where: { ...params },
+    })
+    return {
+      items: items.length,
+      data: items,
+    }
   }
   async findById(id: string): Promise<any> {}
   async findOneByParam(params: any): Promise<any> {}
