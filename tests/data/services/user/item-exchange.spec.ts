@@ -80,4 +80,13 @@ describe('Items Exchange Service', () => {
     expect(userRepo.findById).toHaveBeenCalledWith(clientId)
     expect(userRepo.findById).toHaveBeenCalledTimes(2)
   })
+
+  it('should throw not_found error if dealer user was not found', async () => {
+    userRepo.findById.mockResolvedValueOnce(null)
+    userRepo.findById.mockResolvedValueOnce(clientFound)
+
+    const promise = sut.handle(itemsExchangeDTO)
+
+    expect(promise).rejects.toThrow(new Error('not_found'))
+  })
 })
