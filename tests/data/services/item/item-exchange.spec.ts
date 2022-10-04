@@ -68,6 +68,20 @@ describe('Items Exchange Service', () => {
     sut = new ItemsExchangeService(userRepo, itemRepo)
   })
 
+  it('should call itemRepo.findById with correct params', async () => {
+    await sut.handle(itemsExchangeDTO)
+
+    expect(itemRepo.findById).toHaveBeenCalledWith(
+      itemsExchangeDTO.dealerItems[0].id
+    )
+    expect(itemRepo.findById).toHaveBeenCalledWith(
+      itemsExchangeDTO.clientItems[0].id
+    )
+    expect(itemRepo.findById).toHaveBeenCalledTimes(2)
+  })
+
+  // it('should throw not_found error if one of the dealers item was not found', async () => {})
+
   it('should throw invalid_item if a dealer item does not belong to the dealer', async () => {
     const newItemsExchangeDTO = {
       dealerId,
