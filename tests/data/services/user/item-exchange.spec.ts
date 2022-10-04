@@ -1,6 +1,6 @@
 import { IRepository } from '@/data/contracts'
 import { ItemsExchangeService } from '@/data/services/user'
-import { ItemEnumTypes, UserModel } from '@/domain/models'
+import { ItemEnumTypes, ItemModel, UserModel } from '@/domain/models'
 import {
   IItemsExchangeService,
   ItemsExchangeDTOType,
@@ -17,8 +17,8 @@ describe('Items Exchange Service', () => {
   let clientId: string
   let dealerFound: UserModel
   let clientFound: UserModel
-
-  let userRepo: MockProxy<IRepository>
+  let itemRepo: MockProxy<IRepository<ItemModel>>
+  let userRepo: MockProxy<IRepository<UserModel>>
   let itemsExchangeDTO: ItemsExchangeDTOType
   let sut: IItemsExchangeService
 
@@ -37,10 +37,7 @@ describe('Items Exchange Service', () => {
             ItemEnumTypes.food,
             ItemEnumTypes.ammunition,
           ]),
-          points: faker.datatype.number({
-            min: 1,
-            max: 4,
-          }),
+          points: 4,
           userId: dealerId,
         },
       ],
@@ -54,15 +51,13 @@ describe('Items Exchange Service', () => {
             ItemEnumTypes.food,
             ItemEnumTypes.ammunition,
           ]),
-          points: faker.datatype.number({
-            min: 1,
-            max: 4,
-          }),
+          points: 4,
           userId: clientId,
         },
       ],
     }
     userRepo = mock()
+    itemRepo = mock()
     dealerFound = generateUser(dealerId, false)
     clientFound = generateUser(clientId, false)
     userRepo.findById.mockResolvedValue(dealerFound)
@@ -70,7 +65,7 @@ describe('Items Exchange Service', () => {
   })
 
   beforeEach(() => {
-    sut = new ItemsExchangeService(userRepo)
+    sut = new ItemsExchangeService(userRepo, itemRepo)
   })
 
   it('should call UserRepo.findById for each user passing correct params', async () => {
@@ -121,5 +116,119 @@ describe('Items Exchange Service', () => {
     const promise = sut.handle(itemsExchangeDTO)
 
     expect(promise).rejects.toThrow(new Error('invalid_user'))
+  })
+
+  it('should throw invalid_exchange error if client and dealer items dont represent equality of points', async () => {
+    const newItemsExchangeDTO = {
+      dealerId,
+      dealerItems: [
+        {
+          id: faker.datatype.uuid(),
+          name: ItemEnumTypes.water,
+          points: 4,
+          userId: dealerId,
+        },
+      ],
+      clientId,
+      clientItems: [
+        {
+          id: faker.datatype.uuid(),
+          name: ItemEnumTypes.food,
+          points: 3,
+          userId: clientId,
+        },
+      ],
+    }
+
+    const promise = sut.handle(newItemsExchangeDTO)
+
+    expect(promise).rejects.toThrow(new Error('invalid_exchange'))
+  })
+
+  it('should update all items userId field exchanging items between dealer and client', async () => {
+    const dealerItemOneId = faker.datatype.uuid()
+    const dealerItemTwoId = faker.datatype.uuid()
+    const clientItemOneId = faker.datatype.uuid()
+    const clientItemTwoId = faker.datatype.uuid()
+
+    const newItemsExchangeDTO = {
+      dealerId,
+      dealerItems: [
+        {
+          id: dealerItemOneId,
+          name: ItemEnumTypes.water,
+          points: 4,
+          userId: dealerId,
+        },
+        {
+          id: dealerItemTwoId,
+          name: ItemEnumTypes.ammunition,
+          points: 1,
+          userId: dealerId,
+        },
+      ],
+      clientId,
+      clientItems: [
+        {
+          id: clientItemOneId,
+          name: ItemEnumTypes.food,
+          points: 3,
+          userId: clientId,
+        },
+        {
+          id: clientItemTwoId,
+          name: ItemEnumTypes.medicine,
+          points: 2,
+          userId: clientId,
+        },
+      ],
+    }
+
+    await sut.handle(newItemsExchangeDTO)
+
+    const itemsToUpdate = [
+      {
+        id: dealerItemOneId,
+        name: ItemEnumTypes.water,
+        points: 4,
+        userId: clientId,
+      },
+      {
+        id: dealerItemTwoId,
+        name: ItemEnumTypes.ammunition,
+        points: 1,
+        userId: clientId,
+      },
+      {
+        id: clientItemOneId,
+        name: ItemEnumTypes.food,
+        points: 3,
+        userId: dealerId,
+      },
+      {
+        id: clientItemTwoId,
+        name: ItemEnumTypes.medicine,
+        points: 2,
+        userId: dealerId,
+      },
+    ]
+
+    expect(itemRepo.findByIdAndUpdate).toHaveBeenCalledWith(
+      itemsToUpdate[0].id,
+      itemsToUpdate[0]
+    )
+    expect(itemRepo.findByIdAndUpdate).toHaveBeenCalledWith(
+      itemsToUpdate[1].id,
+      itemsToUpdate[1]
+    )
+    expect(itemRepo.findByIdAndUpdate).toHaveBeenCalledWith(
+      itemsToUpdate[2].id,
+      itemsToUpdate[2]
+    )
+    expect(itemRepo.findByIdAndUpdate).toHaveBeenCalledWith(
+      itemsToUpdate[3].id,
+      itemsToUpdate[3]
+    )
+    expect(itemRepo.findByIdAndUpdate).toHaveBeenCalledTimes(4)
   })
 })
