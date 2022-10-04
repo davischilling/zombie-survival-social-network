@@ -1,13 +1,24 @@
 import { SurvivalReportController } from '@/application/controllers/report'
-import { ISurvivalReportService } from '@/domain/use-cases/report'
+import {
+  ISurvivalReportService,
+  SurvivalReportUseCase,
+} from '@/domain/use-cases/report'
 import { mock, MockProxy } from 'jest-mock-extended'
 
 describe('Survival Report Controller', () => {
   let survivalReportService: MockProxy<ISurvivalReportService>
+  let serviceResponse: SurvivalReportUseCase.output
   let sut: SurvivalReportController
 
   beforeAll(() => {
+    serviceResponse = {
+      percentageOfNonInfectedUsers: 50,
+      percentageOfInfectedUsers: 50,
+      averageItemPerUser: [],
+      lostPointsByInfectedUser: 5,
+    }
     survivalReportService = mock()
+    survivalReportService.handle.mockResolvedValue(serviceResponse)
   })
 
   beforeEach(() => {
@@ -29,5 +40,14 @@ describe('Survival Report Controller', () => {
     const promise = sut.perform()
 
     await expect(promise).rejects.toThrow(new Error('service_error'))
+  })
+
+  it('should return 200 statusCode and the survival report on success', async () => {
+    const httpResponse = await sut.perform()
+
+    expect(httpResponse).toEqual({
+      statusCode: 200,
+      data: serviceResponse,
+    })
   })
 })
