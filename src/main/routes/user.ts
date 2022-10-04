@@ -3,6 +3,7 @@ import {
   makeCreateUserController,
   makeUpdateUserLocationController,
   makeMarkUserAsInfectedController,
+  makeItemsExchangeController,
 } from '@/main/factories/controllers/user'
 import { Router } from 'express'
 
@@ -17,6 +18,11 @@ const entityNameRoutes = async (router: Router) => {
   router.patch(
     '/users/:id/infected',
     adaptCtrl(await makeMarkUserAsInfectedController())
+  )
+
+  router.patch(
+    '/users/items-exchange',
+    adaptCtrl(await makeItemsExchangeController())
   )
 }
 
