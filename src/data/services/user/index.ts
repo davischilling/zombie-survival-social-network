@@ -1,3 +1,4 @@
 export * from './create'
 export * from './update-location'
-export * from './mask-as-infected'
+export * from './mark-as-infected'
+export * from './items-exchange'
