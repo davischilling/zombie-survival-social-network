@@ -38,4 +38,13 @@ describe('Item Repository', () => {
 
     expect(id).toBe(itemModelMock.id)
   })
+
+  it('should call destroy with correct params', async () => {
+    await sut.findByIdAndDelete(itemModelMock.id)
+
+    expect(fakeItemSchema.destroy).toHaveBeenCalledWith({
+      where: { _id: itemModelMock.id },
+    })
+    expect(fakeItemSchema.destroy).toHaveBeenCalledTimes(1)
+  })
 })
