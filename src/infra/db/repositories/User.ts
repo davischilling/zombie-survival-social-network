@@ -21,16 +21,13 @@ export class UserRepository implements IRepository {
       data: users,
     }
   }
-  async findById(id: string): Promise<User> {
+  async findById(id: string): Promise<User | null> {
     const user = await UserSchema.findOne({
       where: { _id: id },
     })
-    if (!user) {
-      throw new Error('not_found')
-    }
     return user as any
   }
-  async findOneByParam(params: any): Promise<User> {
+  async findOneByParam(params: any): Promise<User | null> {
     const user = await UserSchema.findOne({
       where: { ...params },
     })
