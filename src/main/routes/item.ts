@@ -15,7 +15,7 @@ const entityNameRoutes = async (router: Router) => {
   )
 
   router.patch(
-    '/items/items-exchange',
+    '/items/exchange',
     adaptCtrl(await makeItemsExchangeController())
   )
 }

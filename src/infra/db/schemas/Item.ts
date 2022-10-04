@@ -20,7 +20,6 @@ export const ItemSchema = db.define(
     userId: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
       references: {
         model: 'user',
         key: '_id',
