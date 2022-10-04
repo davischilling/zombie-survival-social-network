@@ -40,4 +40,13 @@ describe('Remove Item from User Controller', () => {
 
     await expect(promise).rejects.toThrow(new Error('service_error'))
   })
+
+  it('should return 200 statusCode and remove item from user confirmation message on success', async () => {
+    const httpResponse = await sut.perform(removeItemFromUserDTO)
+
+    expect(httpResponse).toEqual({
+      statusCode: 200,
+      data: { message: 'Item removed from user with success' },
+    })
+  })
 })
