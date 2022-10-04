@@ -12,7 +12,7 @@ export class MarkUserAsInfectedController extends Controller {
     await this.markUserAsInfectedService.handle(httpRequest)
     return {
       statusCode: 200,
-      data: {},
+      data: { message: 'Marked user as infected with success' },
     }
   }
 }
