@@ -1,12 +1,16 @@
-import { IIdGenerator, IRepository } from '@/data/contracts'
-import { UserModel } from '@/domain/models'
+import { IRepository } from '@/data/contracts'
+import { ItemPointComparison } from '@/data/utils'
+import { ItemModel, UserModel } from '@/domain/models'
 import {
   IItemsExchangeService,
   ItemsExchangeUseCase,
 } from '@/domain/use-cases/user'
 
 export class ItemsExchangeService implements IItemsExchangeService {
-  constructor(private readonly userRepo: IRepository<UserModel>) {}
+  constructor(
+    private readonly userRepo: IRepository<UserModel>,
+    private readonly itemRepo: IRepository<ItemModel>
+  ) {}
 
   async handle({
     dealerId,
@@ -24,5 +28,28 @@ export class ItemsExchangeService implements IItemsExchangeService {
     if (dealer.isInfected || client.isInfected) {
       throw new Error('invalid_user')
     }
+    if (!ItemPointComparison(dealerItems, clientItems)) {
+      throw new Error('invalid_exchange')
+    }
+    const promisesToUpdateItems: any[] = []
+    dealerItems.forEach((item) => {
+      const { userId, ...itemAttrs } = item
+      promisesToUpdateItems.push(
+        this.itemRepo.findByIdAndUpdate(item.id, {
+          ...itemAttrs,
+          userId: clientId,
+        })
+      )
+    })
+    clientItems.forEach((item) => {
+      const { userId, ...itemAttrs } = item
+      promisesToUpdateItems.push(
+        this.itemRepo.findByIdAndUpdate(item.id, {
+          ...itemAttrs,
+          userId: dealerId,
+        })
+      )
+    })
+    await Promise.all(promisesToUpdateItems)
   }
 }
