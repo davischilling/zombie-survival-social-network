@@ -28,6 +28,24 @@ describe('Mark User as Infected Route - PATCH /users/:id/infected', () => {
     await db.sync()
   })
 
+  it('should return 400 and invalid_user error if two ids are the same', async () => {
+    const newUser = await createUser(faker.datatype.uuid(), false)
+    const newSnitchTwo = await createUser(faker.datatype.uuid(), false)
+    const newSnitchThree = await createUser(faker.datatype.uuid(), false)
+
+    const { statusCode, body } = await request(app)
+      .patch(`/users/${newUser.id}/infected`)
+      .set('Accept', 'application/json')
+      .query({
+        snitchOneId: newUser.id,
+        snitchTwoId: newSnitchTwo.id,
+        snitchThreeId: newSnitchThree.id,
+      })
+
+    expect(statusCode).toBe(400)
+    expect(body).toEqual({ error: 'invalid_user' })
+  })
+
   it('should return 404 and not_found error if user to update does not exist', async () => {
     const newSnitchOne = await createUser(faker.datatype.uuid(), false)
     const newSnitchTwo = await createUser(faker.datatype.uuid(), false)
