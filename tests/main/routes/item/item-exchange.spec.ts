@@ -24,8 +24,8 @@ const createUser = async (idParam: string, isInfectedParam: boolean) => {
   return UserRepository.sqliteToDTO(dataValues)
 }
 
-const createItem = async (userId?: string) => {
-  const item: ItemModel = generateItem({ userId })
+const createItem = async (userId?: string, points?: number) => {
+  const item: ItemModel = generateItem({ userId, points })
   const { id: _id, ...itemAttrs } = item
   console.log(item)
 
@@ -108,5 +108,29 @@ describe('Item Exchange Route - PATCH /items/exchange', () => {
 
     expect(statusCode).toBe(400)
     expect(body).toEqual({ error: 'invalid_user' })
+  })
+
+  it('should return 400 and invalid_exchange error item points does not match', async () => {
+    const newUserOne = await createUser(faker.datatype.uuid(), false)
+    const newUserTwo = await createUser(faker.datatype.uuid(), false)
+
+    const newItemOne = await createItem(newUserOne.id, 4)
+    const newItemTwo = await createItem(newUserOne.id, 2)
+    const newItemThree = await createItem(newUserTwo.id, 3)
+
+    const { statusCode, body } = await request(app)
+      .patch('/items/exchange')
+      .set('Accept', 'application/json')
+      .query({
+        dealerId: newUserOne.id,
+        clientId: newUserTwo.id,
+      })
+      .send({
+        dealerItems: [newItemOne, newItemTwo],
+        clientItems: [newItemThree],
+      })
+
+    expect(statusCode).toBe(400)
+    expect(body).toEqual({ error: 'invalid_exchange' })
   })
 })
