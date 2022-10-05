@@ -1,5 +1,6 @@
 import { NotFoundError, ValidationError } from '@/application/errors'
 import { IRepository } from '@/data/contracts'
+import { areThereToEqualIds } from '@/data/utils'
 import { UserModel } from '@/domain/models'
 import {
   IMarkUserAsInfectedService,
@@ -15,6 +16,9 @@ export class MarkUserAsInfectedService implements IMarkUserAsInfectedService {
     snitchTwoId,
     snitchThreeId,
   }: MarkUserAsInfectedUseCase.input): Promise<void> {
+    if (areThereToEqualIds([id, snitchOneId, snitchTwoId, snitchThreeId])) {
+      throw new ValidationError('invalid_user')
+    }
     const [userToUpdate, snitchOneFound, snitchTwoFound, snitchThreeFound] =
       await Promise.all([
         this.userRepo.findById(id),
