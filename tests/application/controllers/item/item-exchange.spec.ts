@@ -1,4 +1,5 @@
 import { ItemsExchangeController } from '@/application/controllers/item'
+import { ServerError } from '@/application/errors'
 import { ItemEnumTypes } from '@/domain/models'
 import {
   ItemsExchangeDTOType,
@@ -62,13 +63,12 @@ describe('Items Exchange Controller', () => {
   })
 
   it('should rethrow if itemsExchangeService.handle throws', async () => {
-    itemsExchangeService.handle.mockRejectedValueOnce(
-      new Error('service_error')
-    )
+    const error = new ServerError(new Error('server_error'))
+    itemsExchangeService.handle.mockRejectedValueOnce(error)
 
     const promise = sut.perform(itemsExchangeDTO)
 
-    await expect(promise).rejects.toThrow(new Error('service_error'))
+    await expect(promise).rejects.toThrow(error)
   })
 
   it('should return 200 statusCode and return confirmation message on success', async () => {

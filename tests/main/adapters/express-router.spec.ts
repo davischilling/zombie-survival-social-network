@@ -1,4 +1,5 @@
 import { Controller } from '@/application/controllers/Controller'
+import { ServerError, ValidationError } from '@/application/errors'
 import { adaptExpressRoute } from '@/main/adapters'
 import { getMockReq, getMockRes } from '@jest-mock/express'
 import { Request, Response, RequestHandler, NextFunction } from 'express'
@@ -54,7 +55,7 @@ describe('ExpressRouter Adapter', () => {
   it('should respond with 400 and correct error', async () => {
     controller.handle.mockResolvedValueOnce({
       statusCode: 400,
-      data: new Error('ctrl_error'),
+      data: new ValidationError('ctrl_error'),
     })
 
     await sut(req, res, next)
@@ -68,7 +69,7 @@ describe('ExpressRouter Adapter', () => {
   it('should respond with 500 and correct error', async () => {
     controller.handle.mockResolvedValueOnce({
       statusCode: 500,
-      data: new Error('ctrl_error'),
+      data: new ServerError(new Error('ctrl_error')),
     })
 
     await sut(req, res, next)

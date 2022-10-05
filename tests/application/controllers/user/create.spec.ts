@@ -1,4 +1,5 @@
 import { CreateUserController } from '@/application/controllers/user'
+import { ServerError } from '@/application/errors'
 import { CreateUserDTOType, ICreateUserService } from '@/domain/use-cases/user'
 import { faker } from '@faker-js/faker'
 import { mock, MockProxy } from 'jest-mock-extended'
@@ -36,11 +37,12 @@ describe('Create User Controller', () => {
   })
 
   it('should rethrow if createUserService.handle throws', async () => {
-    createUserService.handle.mockRejectedValueOnce(new Error('service_error'))
+    const error = new ServerError(new Error('server_error'))
+    createUserService.handle.mockRejectedValueOnce(error)
 
     const promise = sut.perform(createUserDTO)
 
-    await expect(promise).rejects.toThrow(new Error('service_error'))
+    await expect(promise).rejects.toThrow(error)
   })
 
   it('should return 201 and entityName confirmation message on success', async () => {

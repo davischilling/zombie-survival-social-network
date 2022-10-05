@@ -1,4 +1,5 @@
 import { MarkUserAsInfectedController } from '@/application/controllers/user'
+import { ServerError } from '@/application/errors'
 import {
   MarkUserAsInfectedDTOType,
   IMarkUserAsInfectedService,
@@ -35,13 +36,12 @@ describe('Mark User As Infected Controller', () => {
   })
 
   it('should rethrow if markUserAsInfectedService.handle throws', async () => {
-    markUserAsInfectedService.handle.mockRejectedValueOnce(
-      new Error('service_error')
-    )
+    const error = new ServerError(new Error('server_error'))
+    markUserAsInfectedService.handle.mockRejectedValueOnce(error)
 
     const promise = sut.perform(markUserAsInfectedDTO)
 
-    await expect(promise).rejects.toThrow(new Error('service_error'))
+    await expect(promise).rejects.toThrow(error)
   })
 
   it('should return 200 statusCode and return confirmation message on success', async () => {

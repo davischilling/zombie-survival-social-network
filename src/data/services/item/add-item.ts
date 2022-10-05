@@ -1,3 +1,4 @@
+import { NotFoundError } from '@/application/errors'
 import { IIdGenerator, IRepository } from '@/data/contracts'
 import Item from '@/data/entities/Item'
 import { ItemModel, UserModel } from '@/domain/models'
@@ -16,7 +17,7 @@ export class AddItemToUserService implements IAddItemToUserService {
   async handle({ userId, name }: AddItemToUserUseCase.input): Promise<void> {
     const user = await this.userRepo.findById(userId)
     if (!user) {
-      throw new Error('not_found')
+      throw new NotFoundError('user')
     }
     const newItem = new Item({ userId, name }, this.idGenerator)
     await this.itemRepo.create(newItem)

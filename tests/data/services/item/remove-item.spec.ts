@@ -1,3 +1,4 @@
+import { ServerError } from '@/application/errors'
 import { IRepository } from '@/data/contracts'
 import { RemoveItemFromUserService } from '@/data/services/item'
 import { ItemModel } from '@/domain/models'
@@ -36,14 +37,11 @@ describe('Remove Item from User Service', () => {
   })
 
   it('should rethrow if itemRepo throws', async () => {
-    itemRepo.findByIdAndDelete.mockRejectedValueOnce(
-      new Error('findById_repo_error')
-    )
+    const error = new ServerError(new Error('itemRepo_findById_error'))
+    itemRepo.findByIdAndDelete.mockRejectedValueOnce(error)
 
     const findByIdPromise = sut.handle(removeItemFromUserDTO)
 
-    await expect(findByIdPromise).rejects.toThrow(
-      new Error('findById_repo_error')
-    )
+    await expect(findByIdPromise).rejects.toThrow(error)
   })
 })

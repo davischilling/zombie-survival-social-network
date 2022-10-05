@@ -1,3 +1,4 @@
+import { NotFoundError, ServerError } from '@/application/errors'
 import { IIdGenerator, IRepository } from '@/data/contracts'
 import Item from '@/data/entities/Item'
 import { AddItemToUserService } from '@/data/services/item'
@@ -54,7 +55,7 @@ describe('Add Item to User Service', () => {
 
     const promise = sut.handle(addItemToUserDTO)
 
-    expect(promise).rejects.toThrow(new Error('not_found'))
+    expect(promise).rejects.toThrow(new NotFoundError('user'))
   })
 
   it('Should call Item class constructor with correct params', async () => {
@@ -74,22 +75,20 @@ describe('Add Item to User Service', () => {
   })
 
   it('should rethrow if userRepo throws', async () => {
-    userRepo.findById.mockRejectedValueOnce(new Error('findById_repo_error'))
+    const error = new ServerError(new Error('userRepo_findById__error'))
+    userRepo.findById.mockRejectedValueOnce(error)
 
     const findByIdPromise = sut.handle(addItemToUserDTO)
 
-    await expect(findByIdPromise).rejects.toThrow(
-      new Error('findById_repo_error')
-    )
+    await expect(findByIdPromise).rejects.toThrow(error)
   })
 
   it('should rethrow if itemRepo throws', async () => {
-    itemRepo.create.mockRejectedValueOnce(new Error('create_repo_error'))
+    const error = new ServerError(new Error('itemRepo_create_error'))
+    itemRepo.create.mockRejectedValueOnce(error)
 
     const createItemPromise = sut.handle(addItemToUserDTO)
 
-    await expect(createItemPromise).rejects.toThrow(
-      new Error('create_repo_error')
-    )
+    await expect(createItemPromise).rejects.toThrow(error)
   })
 })

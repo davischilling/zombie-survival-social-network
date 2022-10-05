@@ -1,3 +1,4 @@
+import { NotFoundError } from '@/application/errors'
 import { IRepository } from '@/data/contracts'
 import Item from '@/data/entities/Item'
 import { ItemModel, ItemTypes } from '@/domain/models'
@@ -62,7 +63,7 @@ export class ItemRepository implements IRepository {
       where: { _id: id },
     })
     if (!itemId) {
-      throw new Error('not_found')
+      throw new NotFoundError('item')
     }
   }
 }

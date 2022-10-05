@@ -1,4 +1,5 @@
 import { HttpResponse, Controller } from '@/application/controllers/Controller'
+import { NotFoundError, ServerError } from '@/application/errors'
 
 class ControllerStub extends Controller {
   result: HttpResponse = {
@@ -18,8 +19,8 @@ describe('Abstract Controller', () => {
     sut = new ControllerStub()
   })
 
-  it('should return 404 if perform throws', async () => {
-    const error = new Error('not_found')
+  it('should return 404 if perform throws NotFoundError', async () => {
+    const error = new NotFoundError('not_found')
     jest.spyOn(sut, 'perform').mockRejectedValueOnce(error)
 
     const httpResponse = await sut.handle('any_value')
@@ -30,8 +31,8 @@ describe('Abstract Controller', () => {
     })
   })
 
-  it('should return 500 if perform throws', async () => {
-    const error = new Error('perform_error')
+  it('should return 500 if perform throws ServerError', async () => {
+    const error = new ServerError(new Error('server_error'))
     jest.spyOn(sut, 'perform').mockRejectedValueOnce(error)
 
     const httpResponse = await sut.handle('any_value')

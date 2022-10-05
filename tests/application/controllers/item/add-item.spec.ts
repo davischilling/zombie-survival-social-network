@@ -1,4 +1,6 @@
 import { AddItemToUserController } from '@/application/controllers/item'
+import { ServerError } from '@/application/errors'
+import { serverError } from '@/application/helpers'
 import { ItemEnumTypes } from '@/domain/models'
 import {
   AddItemToUserDTOType,
@@ -37,13 +39,12 @@ describe('Add Item to User Controller', () => {
   })
 
   it('should rethrow if addItemToUserService.handle throws', async () => {
-    addItemToUserService.handle.mockRejectedValueOnce(
-      new Error('service_error')
-    )
+    const error = new ServerError(new Error('server_error'))
+    addItemToUserService.handle.mockRejectedValueOnce(error)
 
     const promise = sut.perform(addItemToUserDTO)
 
-    await expect(promise).rejects.toThrow(new Error('service_error'))
+    await expect(promise).rejects.toThrow(error)
   })
 
   it('should return 201 statusCode and add item to user confirmation message on success', async () => {

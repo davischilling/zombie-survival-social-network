@@ -1,3 +1,4 @@
+import { ServerError } from '@/application/errors'
 import { IRepository } from '@/data/contracts'
 import { SurvivalReportService } from '@/data/services/report'
 import { ItemEnumTypes, ItemModel, UserModel } from '@/domain/models'
@@ -46,11 +47,12 @@ describe('Survival Report Service', () => {
   })
 
   it('should rethrow if userRepo.find throws', async () => {
-    userRepo.find.mockRejectedValueOnce(new Error('find_repo_error'))
+    const error = new ServerError(new Error('userRepo_find_error'))
+    userRepo.find.mockRejectedValueOnce(error)
 
     const findPromise = sut.handle()
 
-    await expect(findPromise).rejects.toThrow(new Error('find_repo_error'))
+    await expect(findPromise).rejects.toThrow(error)
   })
 
   it('should calculate percentageOfInfectedUsers and percentageOfNonInfectedUsers correctly', async () => {
@@ -73,11 +75,12 @@ describe('Survival Report Service', () => {
   })
 
   it('should rethrow if itemRepo.find throws', async () => {
-    itemRepo.find.mockRejectedValueOnce(new Error('find_repo_error'))
+    const error = new ServerError(new Error('itemRepo_find_error'))
+    itemRepo.find.mockRejectedValueOnce(error)
 
     const findPromise = sut.handle()
 
-    await expect(findPromise).rejects.toThrow(new Error('find_repo_error'))
+    await expect(findPromise).rejects.toThrow(error)
   })
 
   it('should calculate averageItemPerUser correctly', async () => {

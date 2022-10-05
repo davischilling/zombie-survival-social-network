@@ -1,3 +1,4 @@
+import { NotFoundError, ValidationError } from '@/application/errors'
 import { IRepository } from '@/data/contracts'
 import { ItemsExchangeService } from '@/data/services/item'
 import { ItemEnumTypes, ItemModel, UserModel } from '@/domain/models'
@@ -87,7 +88,7 @@ describe('Items Exchange Service', () => {
 
     const promise = sut.handle(itemsExchangeDTO)
 
-    expect(promise).rejects.toThrow(new Error('not_found'))
+    expect(promise).rejects.toThrow(new NotFoundError('item'))
   })
 
   it('should throw invalid_item if a dealer item does not belong to the dealer', async () => {
@@ -124,7 +125,7 @@ describe('Items Exchange Service', () => {
 
     const promise = sut.handle(newItemsExchangeDTO)
 
-    expect(promise).rejects.toThrow(new Error('invalid_item'))
+    expect(promise).rejects.toThrow(new ValidationError('invalid_item'))
   })
 
   it('should throw invalid_item if a client item does not belong to the client', async () => {
@@ -161,7 +162,7 @@ describe('Items Exchange Service', () => {
 
     const promise = sut.handle(newItemsExchangeDTO)
 
-    expect(promise).rejects.toThrow(new Error('invalid_item'))
+    expect(promise).rejects.toThrow(new ValidationError('invalid_item'))
   })
 
   it('should call UserRepo.findById for each user passing correct params', async () => {
@@ -178,7 +179,7 @@ describe('Items Exchange Service', () => {
 
     const promise = sut.handle(itemsExchangeDTO)
 
-    expect(promise).rejects.toThrow(new Error('not_found'))
+    expect(promise).rejects.toThrow(new NotFoundError('user'))
   })
 
   it('should throw not_found error if client user was not found', async () => {
@@ -187,7 +188,7 @@ describe('Items Exchange Service', () => {
 
     const promise = sut.handle(itemsExchangeDTO)
 
-    expect(promise).rejects.toThrow(new Error('not_found'))
+    expect(promise).rejects.toThrow(new NotFoundError('user'))
   })
 
   it('should throw invalid_user error if dealer user is infected', async () => {
@@ -199,7 +200,7 @@ describe('Items Exchange Service', () => {
 
     const promise = sut.handle(itemsExchangeDTO)
 
-    expect(promise).rejects.toThrow(new Error('invalid_user'))
+    expect(promise).rejects.toThrow(new ValidationError('invalid_user'))
   })
 
   it('should throw invalid_user error if client user is infected', async () => {
@@ -211,7 +212,7 @@ describe('Items Exchange Service', () => {
 
     const promise = sut.handle(itemsExchangeDTO)
 
-    expect(promise).rejects.toThrow(new Error('invalid_user'))
+    expect(promise).rejects.toThrow(new ValidationError('invalid_user'))
   })
 
   it('should throw invalid_exchange error if client and dealer items dont represent equality of points', async () => {
@@ -238,7 +239,7 @@ describe('Items Exchange Service', () => {
 
     const promise = sut.handle(newItemsExchangeDTO)
 
-    expect(promise).rejects.toThrow(new Error('invalid_exchange'))
+    expect(promise).rejects.toThrow(new ValidationError('invalid_exchange'))
   })
 
   it('should update all items userId field exchanging items between dealer and client', async () => {

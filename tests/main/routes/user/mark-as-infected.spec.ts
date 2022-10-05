@@ -8,8 +8,8 @@ import request from 'supertest'
 
 import { generateUser } from '../mocks/generateUser'
 
-const createUser = async () => {
-  const user = generateUser()
+const createUser = async (id?: string, isInfected?: boolean) => {
+  const user = id && isInfected ? generateUser(id, isInfected) : generateUser()
   const { id: _id, location, ...userAttrs } = user
   const { latitude, longitude } = location
 
@@ -49,7 +49,7 @@ describe('Mark User as Infected Route - PATCH /users/:id/infected', () => {
       })
 
     expect(statusCode).toBe(404)
-    expect(body).toEqual({ error: 'not_found' })
+    expect(body).toEqual({ error: 'USER not_found' })
   })
 
   it('should return 404 and not_found error if snitch one does not exist', async () => {
@@ -65,7 +65,7 @@ describe('Mark User as Infected Route - PATCH /users/:id/infected', () => {
       })
 
     expect(statusCode).toBe(404)
-    expect(body).toEqual({ error: 'not_found' })
+    expect(body).toEqual({ error: 'USER not_found' })
   })
 
   it('should return 404 and not_found error if snitch two does not exist', async () => {
@@ -82,7 +82,7 @@ describe('Mark User as Infected Route - PATCH /users/:id/infected', () => {
       })
 
     expect(statusCode).toBe(404)
-    expect(body).toEqual({ error: 'not_found' })
+    expect(body).toEqual({ error: 'USER not_found' })
   })
 
   it('should return 404 and not_found error if snitch three does not exist', async () => {
@@ -100,6 +100,26 @@ describe('Mark User as Infected Route - PATCH /users/:id/infected', () => {
       })
 
     expect(statusCode).toBe(404)
-    expect(body).toEqual({ error: 'not_found' })
+    expect(body).toEqual({ error: 'USER not_found' })
+  })
+
+  it('should return 400 and invalid_user error if user to update is already infected', async () => {
+    const id = faker.datatype.uuid()
+    const user = await createUser(id, true)
+    const snitchOne = await createUser()
+    const snitchTwo = await createUser()
+    const snitchThree = await createUser()
+
+    const { statusCode, body } = await request(app)
+      .patch(`/users/${user.id}/infected`)
+      .set('Accept', 'application/json')
+      .query({
+        snitchOneId: snitchOne.id,
+        snitchTwoId: snitchTwo.id,
+        snitchThreeId: snitchThree.id,
+      })
+
+    expect(statusCode).toBe(400)
+    expect(body).toEqual({ error: 'invalid_user' })
   })
 })

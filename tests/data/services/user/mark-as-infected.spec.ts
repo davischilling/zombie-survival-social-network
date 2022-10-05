@@ -1,3 +1,8 @@
+import {
+  NotFoundError,
+  ServerError,
+  ValidationError,
+} from '@/application/errors'
 import { IRepository } from '@/data/contracts'
 import { MarkUserAsInfectedService } from '@/data/services/user'
 import { UserModel } from '@/domain/models'
@@ -57,11 +62,12 @@ describe('Mark User as infected Service', () => {
   })
 
   it('should rethrow if userRepo.findById throws', async () => {
-    userRepo.findById.mockRejectedValueOnce(new Error('repo_error'))
+    const error = new ServerError(new Error('userRepo_findById_error'))
+    userRepo.findById.mockRejectedValueOnce(error)
 
     const promise = sut.handle(markUserAsInfectedDTO)
 
-    await expect(promise).rejects.toThrow(new Error('repo_error'))
+    await expect(promise).rejects.toThrow(error)
   })
 
   it('should throw not_found if the user about to be updated was not found', async () => {
@@ -72,7 +78,7 @@ describe('Mark User as infected Service', () => {
 
     const promise = sut.handle(markUserAsInfectedDTO)
 
-    expect(promise).rejects.toThrow(new Error('not_found'))
+    expect(promise).rejects.toThrow(new NotFoundError('user'))
   })
 
   it('should throw not_found if snitch one was not found', async () => {
@@ -83,7 +89,7 @@ describe('Mark User as infected Service', () => {
 
     const promise = sut.handle(markUserAsInfectedDTO)
 
-    expect(promise).rejects.toThrow(new Error('not_found'))
+    expect(promise).rejects.toThrow(new NotFoundError('user'))
   })
 
   it('should throw not_found if snitch two was not found', async () => {
@@ -94,7 +100,7 @@ describe('Mark User as infected Service', () => {
 
     const promise = sut.handle(markUserAsInfectedDTO)
 
-    expect(promise).rejects.toThrow(new Error('not_found'))
+    expect(promise).rejects.toThrow(new NotFoundError('user'))
   })
 
   it('should throw not_found if snitch two was not found', async () => {
@@ -105,7 +111,7 @@ describe('Mark User as infected Service', () => {
 
     const promise = sut.handle(markUserAsInfectedDTO)
 
-    expect(promise).rejects.toThrow(new Error('not_found'))
+    expect(promise).rejects.toThrow(new NotFoundError('user'))
   })
 
   it('should throw invalid_user if the user about to be updated is already infected', async () => {
@@ -120,7 +126,7 @@ describe('Mark User as infected Service', () => {
 
     const promise = sut.handle(markUserAsInfectedDTO)
 
-    expect(promise).rejects.toThrow(new Error('invalid_user'))
+    expect(promise).rejects.toThrow(new ValidationError('invalid_user'))
   })
 
   it('should throw invalid_user if snitch one is infected', async () => {
@@ -135,7 +141,7 @@ describe('Mark User as infected Service', () => {
 
     const promise = sut.handle(markUserAsInfectedDTO)
 
-    expect(promise).rejects.toThrow(new Error('invalid_user'))
+    expect(promise).rejects.toThrow(new ValidationError('invalid_user'))
   })
 
   it('should throw invalid_user if snitch two is infected', async () => {
@@ -150,7 +156,7 @@ describe('Mark User as infected Service', () => {
 
     const promise = sut.handle(markUserAsInfectedDTO)
 
-    expect(promise).rejects.toThrow(new Error('invalid_user'))
+    expect(promise).rejects.toThrow(new ValidationError('invalid_user'))
   })
 
   it('should throw invalid_user if snitch three is infected', async () => {
@@ -165,7 +171,7 @@ describe('Mark User as infected Service', () => {
 
     const promise = sut.handle(markUserAsInfectedDTO)
 
-    expect(promise).rejects.toThrow(new Error('invalid_user'))
+    expect(promise).rejects.toThrow(new ValidationError('invalid_user'))
   })
 
   it('should call userRepo.findByIdAndUpdate with correct params', async () => {

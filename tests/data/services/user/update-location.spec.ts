@@ -1,3 +1,4 @@
+import { NotFoundError, ServerError } from '@/application/errors'
 import { IIdGenerator, IRepository } from '@/data/contracts'
 import User from '@/data/entities/user'
 import { UpdateUserLocationService } from '@/data/services/user'
@@ -51,7 +52,7 @@ describe('Update User Location Service', () => {
 
     const promise = sut.handle(updateUserLocationDTO)
 
-    expect(promise).rejects.toThrow(new Error('not_found'))
+    expect(promise).rejects.toThrow(new NotFoundError('user'))
   })
 
   it('Should call User class constructor', async () => {
@@ -89,22 +90,22 @@ describe('Update User Location Service', () => {
   })
 
   it('should rethrow if userRepo throws', async () => {
-    userRepo.findById.mockRejectedValueOnce(new Error('findById_repo_error'))
+    const findByIdError = new ServerError(new Error('userRepo_findById_error'))
+    userRepo.findById.mockRejectedValueOnce(findByIdError)
 
     const findByIdPromise = sut.handle(updateUserLocationDTO)
 
-    await expect(findByIdPromise).rejects.toThrow(
-      new Error('findById_repo_error')
-    )
+    await expect(findByIdPromise).rejects.toThrow(findByIdError)
 
-    userRepo.findByIdAndUpdate.mockRejectedValueOnce(
-      new Error('findByIdAndUpdate_repo_error')
+    const findByIdAndUpdateError = new ServerError(
+      new Error('userRepo_findByIdAndUpdate_error')
     )
+    userRepo.findByIdAndUpdate.mockRejectedValueOnce(findByIdAndUpdateError)
 
     const findByIdAndUpdatePromise = sut.handle(updateUserLocationDTO)
 
     await expect(findByIdAndUpdatePromise).rejects.toThrow(
-      new Error('findByIdAndUpdate_repo_error')
+      findByIdAndUpdateError
     )
   })
 })

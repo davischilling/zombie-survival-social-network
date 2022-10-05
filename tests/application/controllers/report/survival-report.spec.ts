@@ -1,4 +1,5 @@
 import { SurvivalReportController } from '@/application/controllers/report'
+import { ServerError } from '@/application/errors'
 import {
   ISurvivalReportService,
   SurvivalReportUseCase,
@@ -33,13 +34,12 @@ describe('Survival Report Controller', () => {
   })
 
   it('should rethrow if survivalReportService.handle throws', async () => {
-    survivalReportService.handle.mockRejectedValueOnce(
-      new Error('service_error')
-    )
+    const error = new ServerError(new Error('server_error'))
+    survivalReportService.handle.mockRejectedValueOnce(error)
 
     const promise = sut.perform()
 
-    await expect(promise).rejects.toThrow(new Error('service_error'))
+    await expect(promise).rejects.toThrow(error)
   })
 
   it('should return 200 statusCode and the survival report on success', async () => {

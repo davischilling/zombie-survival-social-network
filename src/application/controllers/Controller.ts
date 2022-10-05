@@ -1,3 +1,5 @@
+import { httpResponseError } from '@/application/utils'
+
 export type HttpResponse<T = any> = {
   statusCode: number
   data: T
@@ -10,16 +12,7 @@ export abstract class Controller {
     try {
       return await this.perform(httpRequest)
     } catch (err: any) {
-      if (err.message === 'not_found') {
-        return {
-          statusCode: 404,
-          data: err,
-        }
-      }
-      return {
-        statusCode: 500,
-        data: err,
-      }
+      return httpResponseError(err)
     }
   }
 }

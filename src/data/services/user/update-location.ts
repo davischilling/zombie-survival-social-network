@@ -1,3 +1,4 @@
+import { NotFoundError } from '@/application/errors'
 import { IIdGenerator, IRepository } from '@/data/contracts'
 import User from '@/data/entities/user'
 import { UserModel } from '@/domain/models'
@@ -18,7 +19,7 @@ export class UpdateUserLocationService implements IUpdateUserLocationService {
   }: UpdateUserLocationUseCase.input): Promise<void> {
     const userFound = await this.userRepo.findById(id)
     if (!userFound) {
-      throw new Error('not_found')
+      throw new NotFoundError('user')
     }
     const { location: oldLocation, ...userAttrs } = userFound
     const updatedUser = new User(

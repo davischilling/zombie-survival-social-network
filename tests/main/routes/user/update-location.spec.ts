@@ -31,7 +31,7 @@ describe('Update User Location Route - PATCH /users/:id/location', () => {
         },
       })
     expect(statusCode).toBe(404)
-    expect(body).toEqual({ error: 'not_found' })
+    expect(body).toEqual({ error: 'USER not_found' })
   })
 
   it('should return 200 and a success message', async () => {

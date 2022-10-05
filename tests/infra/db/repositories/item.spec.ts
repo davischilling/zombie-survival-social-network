@@ -1,3 +1,4 @@
+import { NotFoundError } from '@/application/errors'
 import { ItemEnumTypes, ItemModel } from '@/domain/models'
 import { ItemRepository } from '@/infra/db/repositories'
 import { ItemSchema } from '@/infra/db/schemas/Item'
@@ -64,7 +65,7 @@ describe('Item Repository', () => {
 
     const promise = sut.findByIdAndDelete(itemModelMock.id)
 
-    expect(promise).rejects.toThrow(new Error('not_found'))
+    expect(promise).rejects.toThrow(new NotFoundError('item'))
   })
 
   it('should call update with correct params and return the updated user id', async () => {

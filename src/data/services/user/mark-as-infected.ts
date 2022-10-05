@@ -1,3 +1,4 @@
+import { NotFoundError, ValidationError } from '@/application/errors'
 import { IRepository } from '@/data/contracts'
 import { UserModel } from '@/domain/models'
 import {
@@ -27,7 +28,7 @@ export class MarkUserAsInfectedService implements IMarkUserAsInfectedService {
       !snitchTwoFound ||
       !snitchThreeFound
     ) {
-      throw new Error('not_found')
+      throw new NotFoundError('user')
     }
     if (
       userToUpdate.isInfected ||
@@ -35,7 +36,7 @@ export class MarkUserAsInfectedService implements IMarkUserAsInfectedService {
       snitchTwoFound.isInfected ||
       snitchThreeFound.isInfected
     ) {
-      throw new Error('invalid_user')
+      throw new ValidationError('invalid_user')
     }
     const { isInfected, ...userAttrs } = userToUpdate
     await this.userRepo.findByIdAndUpdate(userToUpdate.id, {
