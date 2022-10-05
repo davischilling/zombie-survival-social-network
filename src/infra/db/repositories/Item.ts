@@ -47,8 +47,19 @@ export class ItemRepository implements IRepository {
       data: itemsDTO,
     }
   }
-  async findById(id: string): Promise<any> {}
-  async findOneByParam(params: any): Promise<any> {}
+  async findById(id: string): Promise<Item | null> {
+    const item: any = await ItemSchema.findOne({
+      where: { _id: id },
+    })
+    if (item) {
+      const { dataValues } = item
+      return ItemRepository.sqliteToDTO(dataValues)
+    }
+    return item
+  }
+  async findOneByParam(params: any): Promise<Item | null> {
+    return null
+  }
 
   async findByIdAndUpdate(id: string, updatedObj: Item): Promise<string> {
     const { id: _id, ...itemAttrs } = updatedObj
