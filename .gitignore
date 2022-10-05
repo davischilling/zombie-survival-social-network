@@ -4,3 +4,4 @@ yarn.lock
 yarn-error.log
 .env
 zssn_db.sqlite
+coverage
