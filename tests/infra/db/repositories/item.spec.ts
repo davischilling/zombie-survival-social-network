@@ -1,12 +1,13 @@
 import { NotFoundError } from '@/application/errors'
 import { ItemEnumTypes, ItemModel } from '@/domain/models'
-import { ItemRepository } from '@/infra/db/repositories'
+import { ItemRepository, SqliteItemModel } from '@/infra/db/repositories'
 import { ItemSchema } from '@/infra/db/schemas/Item'
 import { faker } from '@faker-js/faker'
 
 jest.mock('@/infra/db/schemas/Item')
 
 describe('Item Repository', () => {
+  let sqliteResponse: SqliteItemModel
   let itemModelMock: ItemModel
   let fakeItemSchema: jest.Mocked<typeof ItemSchema>
   let sut: ItemRepository
@@ -18,10 +19,22 @@ describe('Item Repository', () => {
       points: 4,
       userId: faker.datatype.uuid(),
     }
+    sqliteResponse = {
+      id: 1,
+      _id: itemModelMock.id,
+      name: itemModelMock.name,
+      points: itemModelMock.points,
+      userId: itemModelMock.userId,
+      createdAt: faker.datatype.datetime(),
+      updatedAt: faker.datatype.datetime(),
+    }
     fakeItemSchema = ItemSchema as jest.Mocked<typeof ItemSchema>
     fakeItemSchema.create.mockResolvedValue(itemModelMock)
     fakeItemSchema.findAll.mockResolvedValue([])
     fakeItemSchema.destroy.mockResolvedValue(1)
+    fakeItemSchema.findOne.mockResolvedValue({
+      dataValues: sqliteResponse,
+    } as any)
   })
 
   beforeEach(() => {
@@ -78,5 +91,30 @@ describe('Item Repository', () => {
     })
     expect(fakeItemSchema.update).toHaveBeenCalledTimes(1)
     expect(id).toEqual(_id)
+  })
+
+  it('should call findOne with correct params, return an user', async () => {
+    const id = faker.datatype.uuid()
+
+    const user = await sut.findById(id)
+
+    expect(fakeItemSchema.findOne).toHaveBeenCalledWith({
+      where: { _id: id },
+    })
+    expect(fakeItemSchema.findOne).toHaveBeenCalledTimes(1)
+    expect(user).toEqual(itemModelMock)
+  })
+
+  it('should call findOne with correct params and null if not found', async () => {
+    const id = faker.datatype.uuid()
+    fakeItemSchema.findOne.mockResolvedValueOnce(null)
+
+    const item = await sut.findById(id)
+
+    expect(fakeItemSchema.findOne).toHaveBeenCalledWith({
+      where: { _id: id },
+    })
+    expect(fakeItemSchema.findOne).toHaveBeenCalledTimes(1)
+    expect(item).toEqual(null)
   })
 })
