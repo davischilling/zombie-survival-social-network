@@ -141,4 +141,23 @@ describe('Mark User as Infected Route - PATCH /users/:id/infected', () => {
     expect(statusCode).toBe(400)
     expect(body).toEqual({ error: 'invalid_user' })
   })
+
+  it('should return 400 and invalid_user error if snitch two is infected', async () => {
+    const user = await createUser(faker.datatype.uuid(), false)
+    const snitchOne = await createUser(faker.datatype.uuid(), false)
+    const snitchTwo = await createUser(faker.datatype.uuid(), true)
+    const snitchThree = await createUser()
+
+    const { statusCode, body } = await request(app)
+      .patch(`/users/${user.id}/infected`)
+      .set('Accept', 'application/json')
+      .query({
+        snitchOneId: snitchOne.id,
+        snitchTwoId: snitchTwo.id,
+        snitchThreeId: snitchThree.id,
+      })
+
+    expect(statusCode).toBe(400)
+    expect(body).toEqual({ error: 'invalid_user' })
+  })
 })
