@@ -1,4 +1,4 @@
-import { IIdGenerator, IRepository } from '@/data/contracts'
+import { IRepository } from '@/data/contracts'
 import { MarkUserAsInfectedService } from '@/data/services/user'
 import { UserModel } from '@/domain/models'
 import {
@@ -14,7 +14,6 @@ jest.mock('@/data/entities/user')
 
 describe('Mark User as infected Service', () => {
   let userRepo: MockProxy<IRepository>
-  let idGenerator: MockProxy<IIdGenerator>
   let markUserAsInfectedDTO: MarkUserAsInfectedDTOType
   let userToUpdateFound: UserModel
   let snitchOneFound: UserModel
@@ -30,7 +29,6 @@ describe('Mark User as infected Service', () => {
       snitchThreeId: faker.datatype.uuid(),
     }
     userRepo = mock()
-    idGenerator = mock()
     userToUpdateFound = generateUser(markUserAsInfectedDTO.id, false)
     snitchOneFound = generateUser(markUserAsInfectedDTO.snitchOneId, false)
     snitchTwoFound = generateUser(markUserAsInfectedDTO.snitchTwoId, false)
@@ -42,7 +40,7 @@ describe('Mark User as infected Service', () => {
   })
 
   beforeEach(() => {
-    sut = new MarkUserAsInfectedService(idGenerator, userRepo)
+    sut = new MarkUserAsInfectedService(userRepo)
   })
 
   it('should call UserRepo.findById with correct params', async () => {

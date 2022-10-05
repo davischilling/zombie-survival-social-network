@@ -1,5 +1,4 @@
-import { IIdGenerator, IRepository } from '@/data/contracts'
-import User from '@/data/entities/user'
+import { IRepository } from '@/data/contracts'
 import { UserModel } from '@/domain/models'
 import {
   IMarkUserAsInfectedService,
@@ -7,10 +6,7 @@ import {
 } from '@/domain/use-cases/user'
 
 export class MarkUserAsInfectedService implements IMarkUserAsInfectedService {
-  constructor(
-    private readonly idGenerator: IIdGenerator,
-    private readonly userRepo: IRepository<UserModel>
-  ) {}
+  constructor(private readonly userRepo: IRepository<UserModel>) {}
 
   async handle({
     id,
