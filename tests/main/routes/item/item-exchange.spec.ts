@@ -133,4 +133,28 @@ describe('Item Exchange Route - PATCH /items/exchange', () => {
     expect(statusCode).toBe(400)
     expect(body).toEqual({ error: 'invalid_exchange' })
   })
+
+  it('should return 200 and success message', async () => {
+    const newUserOne = await createUser(faker.datatype.uuid(), false)
+    const newUserTwo = await createUser(faker.datatype.uuid(), false)
+
+    const newItemOne = await createItem(newUserOne.id, 3)
+    const newItemTwo = await createItem(newUserOne.id, 1)
+    const newItemThree = await createItem(newUserTwo.id, 4)
+
+    const { statusCode, body } = await request(app)
+      .patch('/items/exchange')
+      .set('Accept', 'application/json')
+      .query({
+        dealerId: newUserOne.id,
+        clientId: newUserTwo.id,
+      })
+      .send({
+        dealerItems: [newItemOne, newItemTwo],
+        clientItems: [newItemThree],
+      })
+
+    expect(statusCode).toBe(200)
+    expect(body.message).toEqual('Items exchange completed with success')
+  })
 })
