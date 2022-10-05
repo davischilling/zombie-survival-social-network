@@ -85,4 +85,28 @@ describe('Item Exchange Route - PATCH /items/exchange', () => {
     expect(statusCode).toBe(400)
     expect(body).toEqual({ error: 'invalid_item' })
   })
+
+  it('should return 400 and invalid_user error if one of the users is infected', async () => {
+    const newUserOne = await createUser(faker.datatype.uuid(), false)
+    const newUserTwo = await createUser(faker.datatype.uuid(), true)
+
+    const newItemOne = await createItem(newUserOne.id)
+    const newItemTwo = await createItem(newUserOne.id)
+    const newItemThree = await createItem(newUserTwo.id)
+
+    const { statusCode, body } = await request(app)
+      .patch('/items/exchange')
+      .set('Accept', 'application/json')
+      .query({
+        dealerId: newUserOne.id,
+        clientId: newUserTwo.id,
+      })
+      .send({
+        dealerItems: [newItemOne, newItemTwo],
+        clientItems: [newItemThree],
+      })
+
+    expect(statusCode).toBe(400)
+    expect(body).toEqual({ error: 'invalid_user' })
+  })
 })
