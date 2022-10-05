@@ -4,19 +4,20 @@ import { app } from '@/main/config/app'
 import { db } from '@/main/config/database'
 import request from 'supertest'
 
-import { generateUser } from './mocks/generateUser'
+import { generateUser } from '../mocks/generateUser'
 
-describe('User Routes', () => {
+describe('Create User Route - POST /users', () => {
   let user: UserModel
 
-  beforeAll(async () => {})
-
-  beforeEach(async () => {
-    await db.sync()
+  beforeAll(async () => {
     user = generateUser()
   })
 
-  it('POST /users - should return 201 and success message', async () => {
+  beforeEach(async () => {
+    await db.sync()
+  })
+
+  it('should return 201 and a success message', async () => {
     const users: any = await UserSchema.findAll()
 
     expect(users.length).toBe(0)
@@ -31,7 +32,6 @@ describe('User Routes', () => {
     expect(body.message).toBe('User created')
 
     const afterUserCreation: any = await UserSchema.findAll()
-    console.log(afterUserCreation)
 
     expect(afterUserCreation.length).toBe(1)
   })
