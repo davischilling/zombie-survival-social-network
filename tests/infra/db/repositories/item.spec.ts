@@ -117,4 +117,29 @@ describe('Item Repository', () => {
     expect(fakeItemSchema.findOne).toHaveBeenCalledTimes(1)
     expect(item).toEqual(null)
   })
+
+  it('should call findByOneParam with correct params and return an user', async () => {
+    const name = faker.name.firstName()
+
+    const user = await sut.findOneByParam({ name })
+
+    expect(fakeItemSchema.findOne).toHaveBeenCalledWith({
+      where: { name },
+    })
+    expect(fakeItemSchema.findOne).toHaveBeenCalledTimes(1)
+    expect(user).toEqual(itemModelMock)
+  })
+
+  it('should call findByOneParam with correct params and null if not found', async () => {
+    const name = faker.name.firstName()
+    fakeItemSchema.findOne.mockResolvedValueOnce(null)
+
+    const user = await sut.findOneByParam({ name })
+
+    expect(fakeItemSchema.findOne).toHaveBeenCalledWith({
+      where: { name },
+    })
+    expect(fakeItemSchema.findOne).toHaveBeenCalledTimes(1)
+    expect(user).toEqual(null)
+  })
 })
