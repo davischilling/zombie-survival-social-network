@@ -1,3 +1,9 @@
+import {
+  addItemValidation,
+  removeItemValidation,
+  itemExchangeValidation,
+} from '@/application/validations/item'
+import expressValidator from '@/infra/validation/express-validator'
 import { adaptExpressRoute as adaptCtrl } from '@/main/adapters/express-router'
 import {
   makeAddItemToUserController,
@@ -7,16 +13,22 @@ import {
 import { Router } from 'express'
 
 const itemRoutes = async (router: Router) => {
-  router.post('/items/:userId', adaptCtrl(await makeAddItemToUserController()))
+  router.post(
+    '/items/:userId',
+    addItemValidation,
+    adaptCtrl(await makeAddItemToUserController(), expressValidator)
+  )
 
   router.delete(
     '/items/:id',
-    adaptCtrl(await makeRemoveItemFromUserController())
+    removeItemValidation,
+    adaptCtrl(await makeRemoveItemFromUserController(), expressValidator)
   )
 
   router.patch(
     '/items/exchange',
-    adaptCtrl(await makeItemsExchangeController())
+    itemExchangeValidation,
+    adaptCtrl(await makeItemsExchangeController(), expressValidator)
   )
 }
 

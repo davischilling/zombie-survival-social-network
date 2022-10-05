@@ -1,5 +1,6 @@
 import { Controller } from '@/application/controllers/Controller'
 import { ServerError, ValidationError } from '@/application/errors'
+import { IValidation } from '@/data/contracts'
 import { adaptExpressRoute } from '@/main/adapters'
 import { getMockReq, getMockRes } from '@jest-mock/express'
 import { Request, Response, RequestHandler, NextFunction } from 'express'
@@ -11,11 +12,13 @@ describe('ExpressRouter Adapter', () => {
   let res: Response
   let next: NextFunction
   let controller: MockProxy<Controller>
+  let validation: MockProxy<IValidation>
 
   beforeAll(() => {
     req = getMockReq({ body: { any: 'any_body' }, query: { any: 'any_query' } })
     res = getMockRes().res
     next = getMockRes().next
+    validation = mock()
     controller = mock()
     controller.handle.mockResolvedValue({
       statusCode: 200,
@@ -24,7 +27,33 @@ describe('ExpressRouter Adapter', () => {
   })
 
   beforeEach(() => {
-    sut = adaptExpressRoute(controller)
+    sut = adaptExpressRoute(controller, validation)
+  })
+
+  it('should call validation.validate with correct request', async () => {
+    await sut(req, res, next)
+
+    expect(validation.validate).toHaveBeenCalledWith(req)
+    expect(validation.validate).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return 400 and validation error if validation.validate returns', async () => {
+    validation.validate.mockReturnValueOnce({
+      errors: [
+        {
+          message: 'error_message',
+        },
+      ],
+    })
+
+    await sut(req, res, next)
+
+    expect(res.status).toHaveBeenCalledWith(400)
+    expect(res.status).toHaveBeenCalledTimes(1)
+    expect(res.json).toHaveBeenCalledWith({
+      message: 'error_message',
+    })
+    expect(res.json).toHaveBeenCalledTimes(1)
   })
 
   it('should call handle with correct request', async () => {
