@@ -1,6 +1,7 @@
 import { ServerError } from '@/application/errors'
 import { IRepository } from '@/data/contracts'
 import { SurvivalReportService } from '@/data/services/report'
+import { calculatePercentage } from '@/data/utils'
 import { ItemEnumTypes, ItemModel, UserModel } from '@/domain/models'
 import { ISurvivalReportService } from '@/domain/use-cases/report'
 import { faker } from '@faker-js/faker'
@@ -8,6 +9,14 @@ import { mock, MockProxy } from 'jest-mock-extended'
 
 import { generateItem } from './mocks/generateItem'
 import { generateUser } from './mocks/generateUser'
+
+const calcPercentage = jest.mock(
+  '@/data/utils',
+  jest.fn(() => ({
+    percentageOfNonInfectedUsers: 0,
+    percentageOfInfectedUsers: 0,
+  }))
+)
 
 describe('Survival Report Service', () => {
   let userRepo: MockProxy<IRepository<UserModel>>

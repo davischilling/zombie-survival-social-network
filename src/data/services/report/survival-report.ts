@@ -28,8 +28,8 @@ export class SurvivalReportService implements ISurvivalReportService {
     )
     const { lostPointsByInfectedUser } = calculateLostPoints(allUsers.data)
     return {
-      percentageOfNonInfectedUsers: percentageOfNonInfectedUsers || 0,
-      percentageOfInfectedUsers: percentageOfInfectedUsers || 0,
+      percentageOfNonInfectedUsers,
+      percentageOfInfectedUsers,
       averageItemPerUser,
       lostPointsByInfectedUser,
     }

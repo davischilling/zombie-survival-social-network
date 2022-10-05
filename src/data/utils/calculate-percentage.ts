@@ -21,12 +21,16 @@ export const calculatePercentage = (
       amountOfInfectedUsers: 0,
     }
   )
+
+  const percentageOfNonInfectedUsers = Number(
+    Math.floor((amountOfNonInfectedUsers * 100) / allUsers.length)
+  )
+  const percentageOfInfectedUsers = Number(
+    Math.floor((amountOfInfectedUsers * 100) / allUsers.length)
+  )
+
   return {
-    percentageOfNonInfectedUsers: Number(
-      Math.floor((amountOfNonInfectedUsers * 100) / allUsers.length)
-    ),
-    percentageOfInfectedUsers: Number(
-      Math.floor((amountOfInfectedUsers * 100) / allUsers.length)
-    ),
+    percentageOfNonInfectedUsers: percentageOfNonInfectedUsers || 0,
+    percentageOfInfectedUsers: percentageOfInfectedUsers || 0,
   }
 }
