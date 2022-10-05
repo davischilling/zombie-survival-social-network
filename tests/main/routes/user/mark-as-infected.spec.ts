@@ -67,4 +67,21 @@ describe('Mark User as Infected Route - PATCH /users/:id/infected', () => {
     expect(statusCode).toBe(404)
     expect(body).toEqual({ error: 'not_found' })
   })
+
+  it('should return 404 and not_found error if snitch two does not exist', async () => {
+    const user = await createUser()
+    const snitchOne = await createUser()
+
+    const { statusCode, body } = await request(app)
+      .patch(`/users/${user.id}/infected`)
+      .set('Accept', 'application/json')
+      .query({
+        snitchOneId: snitchOne.id,
+        snitchTwoId: faker.datatype.uuid(),
+        snitchThreeId: faker.datatype.uuid(),
+      })
+
+    expect(statusCode).toBe(404)
+    expect(body).toEqual({ error: 'not_found' })
+  })
 })
