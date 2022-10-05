@@ -48,6 +48,17 @@ describe('Mark User as infected Service', () => {
     sut = new MarkUserAsInfectedService(userRepo)
   })
 
+  it('should throw invalid_user if two or more users id is the same', async () => {
+    const { snitchOneId, ...markUserAsInfectedAttrs } = markUserAsInfectedDTO
+
+    const promise = sut.handle({
+      snitchOneId: markUserAsInfectedAttrs.id,
+      ...markUserAsInfectedAttrs,
+    })
+
+    expect(promise).rejects.toThrow(new ValidationError('invalid_user'))
+  })
+
   it('should call UserRepo.findById with correct params', async () => {
     await sut.handle(markUserAsInfectedDTO)
 
