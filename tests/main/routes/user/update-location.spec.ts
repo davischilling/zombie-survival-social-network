@@ -59,10 +59,10 @@ describe('Update User Location Route - PATCH /users/:id/location', () => {
     expect(statusCode).toBe(200)
     expect(body.message).toBe('Updated user location')
 
-    const updatedSqlliteUser: any = await UserSchema.findOne({
+    const updatedSqliteUser: any = await UserSchema.findOne({
       where: { _id: dataValues._id },
     })
-    const { dataValues: updatedUser } = updatedSqlliteUser
+    const { dataValues: updatedUser } = updatedSqliteUser
 
     expect(updatedUser.latitude).toBe('36.076637')
     expect(updatedUser.longitude).toBe('-95.903633')
