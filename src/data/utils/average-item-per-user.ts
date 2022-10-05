@@ -25,15 +25,23 @@ export const calculateAverageItemPerUser = (
 ) => {
   const averageItemPerUser: UserAverageReportType[] = []
   for (let i = 0; i < allUsers.length; i++) {
+    const averageWater = itemTypeAverage(ItemEnumTypes.water, itemsByUsers[i])
+    const averageFood = itemTypeAverage(ItemEnumTypes.food, itemsByUsers[i])
+    const averageMedicine = itemTypeAverage(
+      ItemEnumTypes.medicine,
+      itemsByUsers[i]
+    )
+    const averageAmmunition = itemTypeAverage(
+      ItemEnumTypes.ammunition,
+      itemsByUsers[i]
+    )
+
     averageItemPerUser.push({
       username: allUsers[i].name,
-      averageWater: itemTypeAverage(ItemEnumTypes.water, itemsByUsers[i]),
-      averageFood: itemTypeAverage(ItemEnumTypes.food, itemsByUsers[i]),
-      averageMedicine: itemTypeAverage(ItemEnumTypes.medicine, itemsByUsers[i]),
-      averageAmmunition: itemTypeAverage(
-        ItemEnumTypes.ammunition,
-        itemsByUsers[i]
-      ),
+      averageWater: averageWater || 0,
+      averageFood: averageFood || 0,
+      averageMedicine: averageMedicine || 0,
+      averageAmmunition: averageAmmunition || 0,
     })
   }
   return { averageItemPerUser }
