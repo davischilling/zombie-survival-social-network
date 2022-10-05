@@ -11,7 +11,7 @@ describe('Update User Location Route - PATCH /users/:id/location', () => {
   let user: UserModel
 
   beforeAll(async () => {
-    user = generateUser()
+    user = generateUser(faker.datatype.uuid(), faker.datatype.boolean())
   })
 
   beforeEach(async () => {

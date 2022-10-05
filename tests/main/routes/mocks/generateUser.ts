@@ -1,10 +1,8 @@
+/* eslint-disable no-unneeded-ternary */
 import { UserModel } from '@/domain/models'
 import { faker } from '@faker-js/faker'
 
-export const generateUser = (
-  id = faker.datatype.uuid(),
-  isInfected = faker.datatype.boolean()
-): UserModel => ({
+export const generateUser = (id: string, isInfected: boolean): UserModel => ({
   id,
   name: faker.name.fullName(),
   age: faker.datatype.number({

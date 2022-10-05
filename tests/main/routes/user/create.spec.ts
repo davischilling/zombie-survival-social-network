@@ -2,6 +2,7 @@ import { UserModel } from '@/domain/models'
 import { UserSchema } from '@/infra/db/schemas/User'
 import { app } from '@/main/config/app'
 import { db } from '@/main/config/database'
+import { faker } from '@faker-js/faker'
 import request from 'supertest'
 
 import { generateUser } from '../mocks/generateUser'
@@ -10,7 +11,7 @@ describe('Create User Route - POST /users', () => {
   let user: UserModel
 
   beforeAll(async () => {
-    user = generateUser()
+    user = generateUser(faker.datatype.uuid(), faker.datatype.boolean())
   })
 
   beforeEach(async () => {

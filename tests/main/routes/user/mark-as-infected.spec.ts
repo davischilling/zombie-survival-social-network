@@ -3,13 +3,12 @@ import { UserRepository } from '@/infra/db/repositories/User'
 import { UserSchema } from '@/infra/db/schemas/User'
 import { app } from '@/main/config/app'
 import { db } from '@/main/config/database'
+import { generateUser } from '@/tests/main/routes/mocks/generateUser'
 import { faker } from '@faker-js/faker'
 import request from 'supertest'
 
-import { generateUser } from '../mocks/generateUser'
-
-const createUser = async (id?: string, isInfected?: boolean) => {
-  const user = id && isInfected ? generateUser(id, isInfected) : generateUser()
+const createUser = async (idParam: string, isInfectedParam: boolean) => {
+  const user: UserModel = generateUser(idParam, isInfectedParam)
   const { id: _id, location, ...userAttrs } = user
   const { latitude, longitude } = location
 
@@ -21,31 +20,26 @@ const createUser = async (id?: string, isInfected?: boolean) => {
   })
 
   const { dataValues } = createdSqliteUser
-
   return UserRepository.sqliteToDTO(dataValues)
 }
 
 describe('Mark User as Infected Route - PATCH /users/:id/infected', () => {
-  let user: UserModel
-
-  beforeAll(async () => {
-    user = generateUser()
-  })
-
   beforeEach(async () => {
     await db.sync()
   })
 
   it('should return 404 and not_found error if user to update does not exist', async () => {
-    const id = faker.datatype.uuid()
+    const newSnitchOne = await createUser(faker.datatype.uuid(), false)
+    const newSnitchTwo = await createUser(faker.datatype.uuid(), false)
+    const newSnitchThree = await createUser(faker.datatype.uuid(), false)
 
     const { statusCode, body } = await request(app)
-      .patch(`/users/${id}/infected`)
+      .patch(`/users/${faker.datatype.uuid()}/infected`)
       .set('Accept', 'application/json')
       .query({
-        snitchOneId: faker.datatype.uuid(),
-        snitchTwoId: faker.datatype.uuid(),
-        snitchThreeId: faker.datatype.uuid(),
+        snitchOneId: newSnitchOne.id,
+        snitchTwoId: newSnitchTwo.id,
+        snitchThreeId: newSnitchThree.id,
       })
 
     expect(statusCode).toBe(404)
@@ -53,15 +47,17 @@ describe('Mark User as Infected Route - PATCH /users/:id/infected', () => {
   })
 
   it('should return 404 and not_found error if snitch one does not exist', async () => {
-    const user = await createUser()
+    const newUser = await createUser(faker.datatype.uuid(), false)
+    const newSnitchTwo = await createUser(faker.datatype.uuid(), false)
+    const newSnitchThree = await createUser(faker.datatype.uuid(), false)
 
     const { statusCode, body } = await request(app)
-      .patch(`/users/${user.id}/infected`)
+      .patch(`/users/${newUser.id}/infected`)
       .set('Accept', 'application/json')
       .query({
         snitchOneId: faker.datatype.uuid(),
-        snitchTwoId: faker.datatype.uuid(),
-        snitchThreeId: faker.datatype.uuid(),
+        snitchTwoId: newSnitchTwo.id,
+        snitchThreeId: newSnitchThree.id,
       })
 
     expect(statusCode).toBe(404)
@@ -69,16 +65,17 @@ describe('Mark User as Infected Route - PATCH /users/:id/infected', () => {
   })
 
   it('should return 404 and not_found error if snitch two does not exist', async () => {
-    const user = await createUser()
-    const snitchOne = await createUser()
+    const newUser = await createUser(faker.datatype.uuid(), false)
+    const newSnitchOne = await createUser(faker.datatype.uuid(), false)
+    const newSnitchThree = await createUser(faker.datatype.uuid(), false)
 
     const { statusCode, body } = await request(app)
-      .patch(`/users/${user.id}/infected`)
+      .patch(`/users/${newUser.id}/infected`)
       .set('Accept', 'application/json')
       .query({
-        snitchOneId: snitchOne.id,
+        snitchOneId: newSnitchOne.id,
         snitchTwoId: faker.datatype.uuid(),
-        snitchThreeId: faker.datatype.uuid(),
+        snitchThreeId: newSnitchThree.id,
       })
 
     expect(statusCode).toBe(404)
@@ -86,16 +83,16 @@ describe('Mark User as Infected Route - PATCH /users/:id/infected', () => {
   })
 
   it('should return 404 and not_found error if snitch three does not exist', async () => {
-    const user = await createUser()
-    const snitchOne = await createUser()
-    const snitchTwo = await createUser()
+    const newUser = await createUser(faker.datatype.uuid(), false)
+    const newSnitchOne = await createUser(faker.datatype.uuid(), false)
+    const newSnitchTwo = await createUser(faker.datatype.uuid(), false)
 
     const { statusCode, body } = await request(app)
-      .patch(`/users/${user.id}/infected`)
+      .patch(`/users/${newUser.id}/infected`)
       .set('Accept', 'application/json')
       .query({
-        snitchOneId: snitchOne.id,
-        snitchTwoId: snitchTwo.id,
+        snitchOneId: newSnitchOne.id,
+        snitchTwoId: newSnitchTwo.id,
         snitchThreeId: faker.datatype.uuid(),
       })
 
@@ -104,19 +101,18 @@ describe('Mark User as Infected Route - PATCH /users/:id/infected', () => {
   })
 
   it('should return 400 and invalid_user error if user to update is already infected', async () => {
-    const id = faker.datatype.uuid()
-    const user = await createUser(id, true)
-    const snitchOne = await createUser()
-    const snitchTwo = await createUser()
-    const snitchThree = await createUser()
+    const newUser = await createUser(faker.datatype.uuid(), true)
+    const newSnitchOne = await createUser(faker.datatype.uuid(), false)
+    const newSnitchTwo = await createUser(faker.datatype.uuid(), false)
+    const newSnitchThree = await createUser(faker.datatype.uuid(), false)
 
     const { statusCode, body } = await request(app)
-      .patch(`/users/${user.id}/infected`)
+      .patch(`/users/${newUser.id}/infected`)
       .set('Accept', 'application/json')
       .query({
-        snitchOneId: snitchOne.id,
-        snitchTwoId: snitchTwo.id,
-        snitchThreeId: snitchThree.id,
+        snitchOneId: newSnitchOne.id,
+        snitchTwoId: newSnitchTwo.id,
+        snitchThreeId: newSnitchThree.id,
       })
 
     expect(statusCode).toBe(400)
@@ -124,18 +120,18 @@ describe('Mark User as Infected Route - PATCH /users/:id/infected', () => {
   })
 
   it('should return 400 and invalid_user error if snitch one is infected', async () => {
-    const user = await createUser(faker.datatype.uuid(), false)
-    const snitchOne = await createUser(faker.datatype.uuid(), true)
-    const snitchTwo = await createUser()
-    const snitchThree = await createUser()
+    const newUser = await createUser(faker.datatype.uuid(), false)
+    const newSnitchOne = await createUser(faker.datatype.uuid(), true)
+    const newSnitchTwo = await createUser(faker.datatype.uuid(), false)
+    const newSnitchThree = await createUser(faker.datatype.uuid(), false)
 
     const { statusCode, body } = await request(app)
-      .patch(`/users/${user.id}/infected`)
+      .patch(`/users/${newUser.id}/infected`)
       .set('Accept', 'application/json')
       .query({
-        snitchOneId: snitchOne.id,
-        snitchTwoId: snitchTwo.id,
-        snitchThreeId: snitchThree.id,
+        snitchOneId: newSnitchOne.id,
+        snitchTwoId: newSnitchTwo.id,
+        snitchThreeId: newSnitchThree.id,
       })
 
     expect(statusCode).toBe(400)
@@ -143,18 +139,18 @@ describe('Mark User as Infected Route - PATCH /users/:id/infected', () => {
   })
 
   it('should return 400 and invalid_user error if snitch two is infected', async () => {
-    const user = await createUser(faker.datatype.uuid(), false)
-    const snitchOne = await createUser(faker.datatype.uuid(), false)
-    const snitchTwo = await createUser(faker.datatype.uuid(), true)
-    const snitchThree = await createUser()
+    const newUser = await createUser(faker.datatype.uuid(), false)
+    const newSnitchOne = await createUser(faker.datatype.uuid(), false)
+    const newSnitchTwo = await createUser(faker.datatype.uuid(), true)
+    const newSnitchThree = await createUser(faker.datatype.uuid(), false)
 
     const { statusCode, body } = await request(app)
-      .patch(`/users/${user.id}/infected`)
+      .patch(`/users/${newUser.id}/infected`)
       .set('Accept', 'application/json')
       .query({
-        snitchOneId: snitchOne.id,
-        snitchTwoId: snitchTwo.id,
-        snitchThreeId: snitchThree.id,
+        snitchOneId: newSnitchOne.id,
+        snitchTwoId: newSnitchTwo.id,
+        snitchThreeId: newSnitchThree.id,
       })
 
     expect(statusCode).toBe(400)
@@ -162,21 +158,40 @@ describe('Mark User as Infected Route - PATCH /users/:id/infected', () => {
   })
 
   it('should return 400 and invalid_user error if snitch three is infected', async () => {
-    const user = await createUser(faker.datatype.uuid(), false)
-    const snitchOne = await createUser(faker.datatype.uuid(), false)
-    const snitchTwo = await createUser(faker.datatype.uuid(), false)
-    const snitchThree = await createUser(faker.datatype.uuid(), true)
+    const newUser = await createUser(faker.datatype.uuid(), false)
+    const newSnitchOne = await createUser(faker.datatype.uuid(), false)
+    const newSnitchTwo = await createUser(faker.datatype.uuid(), false)
+    const newSnitchThree = await createUser(faker.datatype.uuid(), true)
 
     const { statusCode, body } = await request(app)
-      .patch(`/users/${user.id}/infected`)
+      .patch(`/users/${newUser.id}/infected`)
       .set('Accept', 'application/json')
       .query({
-        snitchOneId: snitchOne.id,
-        snitchTwoId: snitchTwo.id,
-        snitchThreeId: snitchThree.id,
+        snitchOneId: newSnitchOne.id,
+        snitchTwoId: newSnitchTwo.id,
+        snitchThreeId: newSnitchThree.id,
       })
 
     expect(statusCode).toBe(400)
     expect(body).toEqual({ error: 'invalid_user' })
+  })
+
+  it('should return 200 and success message', async () => {
+    const newUser = await createUser(faker.datatype.uuid(), false)
+    const newSnitchOne = await createUser(faker.datatype.uuid(), false)
+    const newSnitchTwo = await createUser(faker.datatype.uuid(), false)
+    const newSnitchThree = await createUser(faker.datatype.uuid(), false)
+
+    const { statusCode, body } = await request(app)
+      .patch(`/users/${newUser.id}/infected`)
+      .set('Accept', 'application/json')
+      .query({
+        snitchOneId: newSnitchOne.id,
+        snitchTwoId: newSnitchTwo.id,
+        snitchThreeId: newSnitchThree.id,
+      })
+
+    expect(statusCode).toBe(200)
+    expect(body).toEqual({ message: 'Marked user as infected with success' })
   })
 })
