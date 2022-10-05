@@ -1,4 +1,4 @@
-import { ItemEnumTypes, SexEnumTypes } from '@/domain/models'
+import { SexEnumTypes } from '@/domain/models'
 import { db } from '@/main/config/database'
 import { DataTypes } from 'sequelize'
 
