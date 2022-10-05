@@ -30,7 +30,11 @@ describe('Item Repository', () => {
     }
     fakeItemSchema = ItemSchema as jest.Mocked<typeof ItemSchema>
     fakeItemSchema.create.mockResolvedValue(itemModelMock)
-    fakeItemSchema.findAll.mockResolvedValue([])
+    fakeItemSchema.findAll.mockResolvedValue([
+      {
+        dataValues: sqliteResponse,
+      } as any,
+    ])
     fakeItemSchema.destroy.mockResolvedValue(1)
     fakeItemSchema.findOne.mockResolvedValue({
       dataValues: sqliteResponse,
@@ -64,6 +68,47 @@ describe('Item Repository', () => {
       where: { name },
     })
     expect(fakeItemSchema.findAll).toHaveBeenCalledTimes(1)
+  })
+
+  it('should call findAll with correct params and return a list of users', async () => {
+    const name = ItemEnumTypes.water
+
+    const response = await sut.find({ name })
+
+    const users = [
+      {
+        dataValues: sqliteResponse,
+      } as any,
+    ]
+    const itemsDTO = users.map((user: any) => {
+      const { dataValues } = user
+      return ItemRepository.sqliteToDTO(dataValues)
+    })
+
+    expect(fakeItemSchema.findAll).toHaveBeenCalledWith({
+      where: { name },
+    })
+    expect(fakeItemSchema.findAll).toHaveBeenCalledTimes(1)
+    expect(response).toEqual({
+      items: 1,
+      data: itemsDTO,
+    })
+  })
+
+  it('should call findAll with correct params and return an empty list', async () => {
+    fakeItemSchema.findAll.mockResolvedValueOnce([])
+    const name = ItemEnumTypes.water
+
+    const response = await sut.find({ name })
+
+    expect(fakeItemSchema.findAll).toHaveBeenCalledWith({
+      where: { name },
+    })
+    expect(fakeItemSchema.findAll).toHaveBeenCalledTimes(1)
+    expect(response).toEqual({
+      items: 0,
+      data: [],
+    })
   })
 
   it('should call destroy with correct params and throw not found if theres no item to delete', async () => {

@@ -35,8 +35,11 @@ export class ItemRepository implements IRepository {
     const items: any = await ItemSchema.findAll({
       where: { ...params },
     })
-    if (!items) {
-      return [] as any
+    if (!items.length) {
+      return {
+        items: 0,
+        data: [],
+      }
     }
     const itemsDTO = items.map((user: any) => {
       const { dataValues } = user

@@ -40,7 +40,11 @@ describe('User Repository', () => {
     }
     fakeUserSchema = UserSchema as jest.Mocked<typeof UserSchema>
     fakeUserSchema.create.mockResolvedValue(userModelMock)
-    fakeUserSchema.findAll.mockResolvedValue([])
+    fakeUserSchema.findAll.mockResolvedValue([
+      {
+        dataValues: sqliteResponse,
+      } as any,
+    ])
     fakeUserSchema.findOne.mockResolvedValue({
       dataValues: sqliteResponse,
     } as any)
@@ -69,12 +73,42 @@ describe('User Repository', () => {
   it('should call findAll with correct params and return a list of users', async () => {
     const name = faker.name.fullName()
 
-    await sut.find({ name })
+    const response = await sut.find({ name })
+
+    const users = [
+      {
+        dataValues: sqliteResponse,
+      } as any,
+    ]
+    const usersDTO = users.map((user: any) => {
+      const { dataValues } = user
+      return UserRepository.sqliteToDTO(dataValues)
+    })
 
     expect(fakeUserSchema.findAll).toHaveBeenCalledWith({
       where: { name },
     })
     expect(fakeUserSchema.findAll).toHaveBeenCalledTimes(1)
+    expect(response).toEqual({
+      items: 1,
+      data: usersDTO,
+    })
+  })
+
+  it('should call findAll with correct params and return an empty list', async () => {
+    fakeUserSchema.findAll.mockResolvedValueOnce([])
+    const name = faker.name.fullName()
+
+    const response = await sut.find({ name })
+
+    expect(fakeUserSchema.findAll).toHaveBeenCalledWith({
+      where: { name },
+    })
+    expect(fakeUserSchema.findAll).toHaveBeenCalledTimes(1)
+    expect(response).toEqual({
+      items: 0,
+      data: [],
+    })
   })
 
   it('should call findOne with correct params, return an user', async () => {

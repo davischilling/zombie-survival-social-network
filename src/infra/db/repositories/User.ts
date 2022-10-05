@@ -43,8 +43,11 @@ export class UserRepository implements IRepository {
     const users: any = await UserSchema.findAll({
       where: { ...params },
     })
-    if (!users) {
-      return [] as any
+    if (!users.length) {
+      return {
+        items: 0,
+        data: [],
+      }
     }
     const usersDTO = users.map((user: any) => {
       const { dataValues } = user
