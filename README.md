@@ -45,6 +45,8 @@ O sistema conta com os seguintes endpoints:
     ```
   - Ao rodar a aplicação pela primeira vez, o arquivo zssn_db.sqlite será gerado no root do sistema. Para desenvolvimento da API, utilizei o Beekeeper Studio Ultimate, que ao selecinar o arquivo zssn_db.sqlite em uma nova conexão, permite visualizar os registros gerados.
 
+  - É possível acessar os registros do DB utilizando a extensão do SQLite Viewer <https://marketplace.visualstudio.com/items?itemName=qwtel.sqlite-viewer>
+
   - BaseUrl da aplicação: http://localhost:3333/zssn-api
 
   - Acesso a documentação (swagger) da API: http://localhost:3333/zssn-docs
