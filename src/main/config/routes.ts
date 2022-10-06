@@ -1,5 +1,5 @@
-import { makeErrorResponseMiddleware } from '@/main/factories/middlewares'
-import { Router, Express, Request, Response, NextFunction } from 'express'
+import { NotFoundError } from '@/data/errors'
+import { Express, NextFunction, Request, Response, Router } from 'express'
 
 export const apiRoutes = async (app: Express) => {
   const router = Router()
@@ -10,11 +10,13 @@ export const apiRoutes = async (app: Express) => {
 
   app.use(router)
 
+  app.use('*', async (req: Request, res: Response) => {
+    return res.status(404).json({ error: new NotFoundError('route').message })
+  })
+
   app.use(
     async (error: Error, req: Request, res: Response, _next: NextFunction) => {
-      const errorMiddleware = makeErrorResponseMiddleware()
-      const { statusCode, data } = errorMiddleware.execute(error)
-      return res.status(statusCode).json({ error: data })
+      return res.status(500).json({ error })
     }
   )
 }

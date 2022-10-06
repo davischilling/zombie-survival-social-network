@@ -4,7 +4,7 @@ import { db } from '@/main/config/database'
 import { Express } from 'express'
 
 const start = async (app: Express): Promise<void> => {
-  const apiPort = process.env.PORT
+  const apiPort = process.env.PORT || 3333
 
   try {
     await db.sync()
