@@ -8,5 +8,403 @@
       "email": "davischilling.dev@gmail.com"
     }
   },
-  "paths": {}
+  "paths": {
+    "/users": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Create an user",
+        "description": "Create a new user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "age": {
+                    "type": "number",
+                    "required": true
+                  },
+                  "sex": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "location": {
+                    "type": "object",
+                    "properties": {
+                      "latitude": {
+                        "type": "number",
+                        "required": true
+                      },
+                      "longitude": {
+                        "type": "number",
+                        "required": true
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "name": "name sample",
+                  "age": 33,
+                  "sex": "male",
+                  "location": {
+                    "latitude": -22.9473,
+                    "longitude": -43.3422
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created"
+          }
+        }
+      }
+    },
+    "/users/{id}/location": {
+      "patch": {
+        "tags": ["User"],
+        "summary": "Update user",
+        "description": "Update users location",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "location": {
+                    "type": "object",
+                    "properties": {
+                      "latitude": {
+                        "type": "number",
+                        "required": true
+                      },
+                      "longitude": {
+                        "type": "number",
+                        "required": true
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "location": {
+                    "latitude": -22.9473,
+                    "longitude": -43.3422
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated user location"
+          },
+          "404": {
+            "description": "USER not_found"
+          }
+        }
+      }
+    },
+    "/users/{id}/infected": {
+      "patch": {
+        "tags": ["User"],
+        "summary": "Update user",
+        "description": "Mark user as infected",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "snitchOneId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "snitchTwoId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "snitchThreeId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Marked user as infected with success"
+          },
+          "400": {
+            "description": "invalid_user - two equal ids or already infected user"
+          },
+          "404": {
+            "description": "USER not_found"
+          }
+        }
+      }
+    },
+    "/items/{userId}": {
+      "post": {
+        "tags": ["Item"],
+        "summary": "Create Item",
+        "description": "Add a new item to the user",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "name": {
+                  "type": "string",
+                  "enum": ["water", "food", "medicine", "ammunition"]
+                },
+                "example": {
+                  "name": "water"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Item added to user with success"
+          },
+          "400": {
+            "description": "Bad Request - invalid item"
+          }
+        }
+      }
+    },
+    "/items/{id}": {
+      "delete": {
+        "tags": ["Item"],
+        "summary": "Delete item",
+        "description": "Delete a specific item",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Item removed from user with success"
+          }
+        }
+      }
+    },
+    "/items/exchange": {
+      "patch": {
+        "tags": ["Item"],
+        "summary": "Item Enchange",
+        "description": "Exchange items between two users",
+        "parameters": [
+          {
+            "name": "dealerId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "clientId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "dealerItems": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "required": true
+                        },
+                        "userId": {
+                          "type": "string",
+                          "required": true
+                        },
+                        "name": {
+                          "type": "string",
+                          "required": true,
+                          "enum": ["water", "food", "medicine", "ammunition"]
+                        },
+                        "points": {
+                          "type": "number",
+                          "required": true
+                        }
+                      }
+                    }
+                  },
+                  "clientItems": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "required": true
+                        },
+                        "userId": {
+                          "type": "string",
+                          "required": true
+                        },
+                        "name": {
+                          "type": "string",
+                          "required": true,
+                          "enum": ["water", "food", "medicine", "ammunition"]
+                        },
+                        "points": {
+                          "type": "number",
+                          "required": true
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "dealerItems": [
+                    {
+                      "id": "a3151a13-9153-445a-8170-5631c1b72fb4",
+                      "userId": "3dac03eb-6013-4106-9e66-1932c04d5179",
+                      "name": "ammunition",
+                      "points": 1
+                    }
+                  ],
+                  "clientItems": [
+                    {
+                      "id": "c29e2249-10de-4467-8b4e-aea55bf85382",
+                      "userId": "9a42d726-f94f-417d-b0c1-abe963b25022",
+                      "name": "food",
+                      "points": 3
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Items exchange completed with success"
+          },
+          "400": {
+            "description": "Bad Request - invalid_item, invalid_user or invalid_exchange validations error"
+          },
+          "404": {
+            "description": "ITEM not_found error"
+          }
+        }
+      }
+    },
+    "/survival-report": {
+      "get": {
+        "tags": ["Report"],
+        "summary": "Survival report",
+        "description": "Show percentages and average survival",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "percentageOfNonInfectedUsers": {
+                      "type": "number"
+                    },
+                    "percentageOfInfectedUsers": {
+                      "type": "number"
+                    },
+                    "lostPointsByInfectedUser": {
+                      "type": "number"
+                    },
+                    "averageItemPerUser": {
+                      "type": "array",
+                      "items": {
+                        "type": {
+                          "type": "object",
+                          "properties": {
+                            "username": {
+                              "type": "string"
+                            },
+                            "averageWater": {
+                              "type": "number"
+                            },
+                            "averageFood": {
+                              "type": "number"
+                            },
+                            "averageMedicine": {
+                              "type": "number"
+                            },
+                            "averageAmmunition": {
+                              "type": "number"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }
