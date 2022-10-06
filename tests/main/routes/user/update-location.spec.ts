@@ -22,7 +22,7 @@ describe('Update User Location Route - PATCH /users/:id/location', () => {
     const id = faker.datatype.uuid()
 
     const { statusCode, body } = await request(app)
-      .patch(`/users/${id}/location`)
+      .patch(`/zssn-api/users/${id}/location`)
       .set('Accept', 'application/json')
       .send({
         location: {
@@ -38,7 +38,7 @@ describe('Update User Location Route - PATCH /users/:id/location', () => {
     const { id, ...userAttrs } = user
 
     await request(app)
-      .post('/users')
+      .post('/zssn-api/users')
       .set('Accept', 'application/json')
       .send(userAttrs)
 
@@ -47,7 +47,7 @@ describe('Update User Location Route - PATCH /users/:id/location', () => {
     const { dataValues } = users[0]
 
     const { statusCode, body } = await request(app)
-      .patch(`/users/${dataValues._id}/location`)
+      .patch(`/zssn-api/users/${dataValues._id}/location`)
       .set('Accept', 'application/json')
       .send({
         location: {

@@ -69,7 +69,7 @@ describe('Survival Report Route - GET /survival-report', () => {
     await createItem(newUserSix.id, 4, ItemEnumTypes.water)
 
     const { statusCode, body } = await request(app)
-      .get('/survival-report')
+      .get('/zssn-api/survival-report')
       .set('Accept', 'application/json')
 
     console.log(body)

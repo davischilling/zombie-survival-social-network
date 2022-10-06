@@ -32,7 +32,7 @@ describe('Create Item Route - POST /items/:userId', () => {
 
   it('should return 404 and not_found error if user does not exist', async () => {
     const { statusCode, body } = await request(app)
-      .post(`/items/${faker.datatype.uuid()}`)
+      .post(`/zssn-api/items/${faker.datatype.uuid()}`)
       .set('Accept', 'application/json')
       .send({ name: 'water' })
 
@@ -48,7 +48,7 @@ describe('Create Item Route - POST /items/:userId', () => {
     expect(beforeItemCreation.length).toBe(0)
 
     const { statusCode, body } = await request(app)
-      .post(`/items/${newUser.id}`)
+      .post(`/zssn-api/items/${newUser.id}`)
       .set('Accept', 'application/json')
       .send({ name: 'water' })
 

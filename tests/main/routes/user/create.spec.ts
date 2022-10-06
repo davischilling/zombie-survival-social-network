@@ -25,7 +25,7 @@ describe('Create User Route - POST /users', () => {
 
     const { id, ...userAttrs } = user
     const { statusCode, body } = await request(app)
-      .post('/users')
+      .post('/zssn-api/users')
       .set('Accept', 'application/json')
       .send(userAttrs)
 

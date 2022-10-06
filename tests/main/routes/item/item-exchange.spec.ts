@@ -47,7 +47,7 @@ describe('Item Exchange Route - PATCH /items/exchange', () => {
     const newItem = generateItem({})
 
     const { statusCode, body } = await request(app)
-      .patch('/items/exchange')
+      .patch('/zssn-api/items/exchange')
       .set('Accept', 'application/json')
       .query({
         dealerId: faker.datatype.uuid(),
@@ -71,7 +71,7 @@ describe('Item Exchange Route - PATCH /items/exchange', () => {
     const newItemThree = await createItem(newUserTwo.id)
 
     const { statusCode, body } = await request(app)
-      .patch('/items/exchange')
+      .patch('/zssn-api/items/exchange')
       .set('Accept', 'application/json')
       .query({
         dealerId: faker.datatype.uuid(),
@@ -95,7 +95,7 @@ describe('Item Exchange Route - PATCH /items/exchange', () => {
     const newItemThree = await createItem(newUserTwo.id)
 
     const { statusCode, body } = await request(app)
-      .patch('/items/exchange')
+      .patch('/zssn-api/items/exchange')
       .set('Accept', 'application/json')
       .query({
         dealerId: newUserOne.id,
@@ -119,7 +119,7 @@ describe('Item Exchange Route - PATCH /items/exchange', () => {
     const newItemThree = await createItem(newUserTwo.id, 3)
 
     const { statusCode, body } = await request(app)
-      .patch('/items/exchange')
+      .patch('/zssn-api/items/exchange')
       .set('Accept', 'application/json')
       .query({
         dealerId: newUserOne.id,
@@ -143,7 +143,7 @@ describe('Item Exchange Route - PATCH /items/exchange', () => {
     const newItemThree = await createItem(newUserTwo.id, 4)
 
     const { statusCode, body } = await request(app)
-      .patch('/items/exchange')
+      .patch('/zssn-api/items/exchange')
       .set('Accept', 'application/json')
       .query({
         dealerId: newUserOne.id,

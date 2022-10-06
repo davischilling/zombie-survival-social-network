@@ -34,7 +34,7 @@ describe('Mark User as Infected Route - PATCH /users/:id/infected', () => {
     const newSnitchThree = await createUser(faker.datatype.uuid(), false)
 
     const { statusCode, body } = await request(app)
-      .patch(`/users/${newUser.id}/infected`)
+      .patch(`/zssn-api/users/${newUser.id}/infected`)
       .set('Accept', 'application/json')
       .query({
         snitchOneId: newUser.id,
@@ -52,7 +52,7 @@ describe('Mark User as Infected Route - PATCH /users/:id/infected', () => {
     const newSnitchThree = await createUser(faker.datatype.uuid(), false)
 
     const { statusCode, body } = await request(app)
-      .patch(`/users/${faker.datatype.uuid()}/infected`)
+      .patch(`/zssn-api/users/${faker.datatype.uuid()}/infected`)
       .set('Accept', 'application/json')
       .query({
         snitchOneId: newSnitchOne.id,
@@ -70,7 +70,7 @@ describe('Mark User as Infected Route - PATCH /users/:id/infected', () => {
     const newSnitchThree = await createUser(faker.datatype.uuid(), false)
 
     const { statusCode, body } = await request(app)
-      .patch(`/users/${newUser.id}/infected`)
+      .patch(`/zssn-api/users/${newUser.id}/infected`)
       .set('Accept', 'application/json')
       .query({
         snitchOneId: faker.datatype.uuid(),
@@ -88,7 +88,7 @@ describe('Mark User as Infected Route - PATCH /users/:id/infected', () => {
     const newSnitchThree = await createUser(faker.datatype.uuid(), false)
 
     const { statusCode, body } = await request(app)
-      .patch(`/users/${newUser.id}/infected`)
+      .patch(`/zssn-api/users/${newUser.id}/infected`)
       .set('Accept', 'application/json')
       .query({
         snitchOneId: newSnitchOne.id,
@@ -106,7 +106,7 @@ describe('Mark User as Infected Route - PATCH /users/:id/infected', () => {
     const newSnitchTwo = await createUser(faker.datatype.uuid(), false)
 
     const { statusCode, body } = await request(app)
-      .patch(`/users/${newUser.id}/infected`)
+      .patch(`/zssn-api/users/${newUser.id}/infected`)
       .set('Accept', 'application/json')
       .query({
         snitchOneId: newSnitchOne.id,
@@ -125,7 +125,7 @@ describe('Mark User as Infected Route - PATCH /users/:id/infected', () => {
     const newSnitchThree = await createUser(faker.datatype.uuid(), false)
 
     const { statusCode, body } = await request(app)
-      .patch(`/users/${newUser.id}/infected`)
+      .patch(`/zssn-api/users/${newUser.id}/infected`)
       .set('Accept', 'application/json')
       .query({
         snitchOneId: newSnitchOne.id,
@@ -144,7 +144,7 @@ describe('Mark User as Infected Route - PATCH /users/:id/infected', () => {
     const newSnitchThree = await createUser(faker.datatype.uuid(), false)
 
     const { statusCode, body } = await request(app)
-      .patch(`/users/${newUser.id}/infected`)
+      .patch(`/zssn-api/users/${newUser.id}/infected`)
       .set('Accept', 'application/json')
       .query({
         snitchOneId: newSnitchOne.id,
@@ -163,7 +163,7 @@ describe('Mark User as Infected Route - PATCH /users/:id/infected', () => {
     const newSnitchThree = await createUser(faker.datatype.uuid(), false)
 
     const { statusCode, body } = await request(app)
-      .patch(`/users/${newUser.id}/infected`)
+      .patch(`/zssn-api/users/${newUser.id}/infected`)
       .set('Accept', 'application/json')
       .query({
         snitchOneId: newSnitchOne.id,
@@ -182,7 +182,7 @@ describe('Mark User as Infected Route - PATCH /users/:id/infected', () => {
     const newSnitchThree = await createUser(faker.datatype.uuid(), true)
 
     const { statusCode, body } = await request(app)
-      .patch(`/users/${newUser.id}/infected`)
+      .patch(`/zssn-api/users/${newUser.id}/infected`)
       .set('Accept', 'application/json')
       .query({
         snitchOneId: newSnitchOne.id,
@@ -201,7 +201,7 @@ describe('Mark User as Infected Route - PATCH /users/:id/infected', () => {
     const newSnitchThree = await createUser(faker.datatype.uuid(), false)
 
     const { statusCode, body } = await request(app)
-      .patch(`/users/${newUser.id}/infected`)
+      .patch(`/zssn-api/users/${newUser.id}/infected`)
       .set('Accept', 'application/json')
       .query({
         snitchOneId: newSnitchOne.id,
