@@ -11,24 +11,23 @@ O sistema consiste em uma ***API REST***, que irá armazenar informações sobre
 O sistema conta com os seguintes endpoints:
 
 - **Cadastro de usuários na base:**
-  POST /users
+  - POST /users
 
 - **Atualização de localização de usuário:**
-  PATCH /users/:id/location
+  - PATCH /users/:id/location
 
 - **Marcação do usuário como infectado:**
-  PATCH /users/:id/infected
+  - PATCH /users/:id/infected
 
 - **Adicionar/Remover itens do inventário de um usuário:**
-
-  POST /items/:userId
-  DELETE /items/:id
+  - POST /items/:userId
+  - DELETE /items/:id
 
 - **Escambo de bens:**
-  PATCH /items/exchange
+  - PATCH /items/exchange
 
 - **Relatório:**
-  GET /survival-report
+  - GET /survival-report
 
 #### Setup da aplicação
 
