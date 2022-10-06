@@ -31,6 +31,10 @@ O sistema conta com os seguintes endpoints:
 
 #### Setup da aplicação
 
+  - Rodar comando para clonar o projeto
+    ```
+      >> git clone https://github.com/davischilling/zombie-survival-social-network.git
+    ```
   - Rodar comando no terminal para instalar os módulos da aplicação
     ```
       >> npm install
