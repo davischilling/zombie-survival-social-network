@@ -52,7 +52,7 @@ describe('Delete Item Route - DELETE /items/:id', () => {
     expect(beforeItemRemoval.length).toBe(1)
 
     const { statusCode, body } = await request(app)
-      .delete(`/items/${newItem!.id}`)
+      .delete(`/zssn-api/items/${newItem!.id}`)
       .set('Accept', 'application/json')
 
     expect(statusCode).toBe(200)

@@ -7,7 +7,7 @@ import swaggerFile from './swagger.json'
 const app = express()
 
 app.use(express.json())
-app.use('/api-docs', swaggerIi.serve, swaggerIi.setup(swaggerFile))
+app.use('/zssn-docs', swaggerIi.serve, swaggerIi.setup(swaggerFile))
 
 apiRoutes(app)
 
