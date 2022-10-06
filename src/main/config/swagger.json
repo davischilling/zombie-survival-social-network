@@ -8,6 +8,9 @@
       "email": "davischilling.dev@gmail.com"
     }
   },
+  "servers" : [{
+    "url" : "http://localhost:3333/zssn-api"
+  }],
   "paths": {
     "/users": {
       "post": {
