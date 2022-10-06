@@ -1,6 +1,6 @@
-import { NotFoundError, ServerError } from '@/application/errors'
 import { IIdGenerator, IRepository } from '@/data/contracts'
 import User from '@/data/entities/user'
+import { NotFoundError, ServerError } from '@/data/errors'
 import { UpdateUserLocationService } from '@/data/services/user'
 import { UserModel } from '@/domain/models'
 import {

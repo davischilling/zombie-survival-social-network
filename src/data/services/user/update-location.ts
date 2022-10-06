@@ -1,6 +1,6 @@
-import { NotFoundError } from '@/application/errors'
 import { IIdGenerator, IRepository } from '@/data/contracts'
 import User from '@/data/entities/user'
+import { NotFoundError } from '@/data/errors'
 import { UserModel } from '@/domain/models'
 import {
   IUpdateUserLocationService,

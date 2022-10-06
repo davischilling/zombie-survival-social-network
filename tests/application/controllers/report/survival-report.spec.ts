@@ -1,5 +1,5 @@
 import { SurvivalReportController } from '@/application/controllers/report'
-import { ServerError } from '@/application/errors'
+import { ServerError } from '@/data/errors'
 import {
   ISurvivalReportService,
   SurvivalReportUseCase,

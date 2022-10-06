@@ -1,6 +1,6 @@
 import { Controller } from '@/application/controllers/Controller'
-import { ServerError, ValidationError } from '@/application/errors'
 import { IValidation } from '@/data/contracts'
+import { ServerError, ValidationError } from '@/data/errors'
 import { adaptExpressRoute } from '@/main/adapters'
 import { getMockReq, getMockRes } from '@jest-mock/express'
 import { Request, Response, RequestHandler, NextFunction } from 'express'

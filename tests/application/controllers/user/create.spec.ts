@@ -1,5 +1,5 @@
 import { CreateUserController } from '@/application/controllers/user'
-import { ServerError } from '@/application/errors'
+import { ServerError } from '@/data/errors'
 import { CreateUserDTOType, ICreateUserService } from '@/domain/use-cases/user'
 import { faker } from '@faker-js/faker'
 import { mock, MockProxy } from 'jest-mock-extended'

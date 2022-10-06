@@ -1,4 +1,4 @@
-import { NotFoundError } from '@/application/errors'
+import { NotFoundError } from '@/data/errors'
 import { ItemEnumTypes, ItemModel } from '@/domain/models'
 import { ItemRepository, SqliteItemModel } from '@/infra/db/repositories'
 import { ItemSchema } from '@/infra/db/schemas/Item'

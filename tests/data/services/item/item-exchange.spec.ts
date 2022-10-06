@@ -1,5 +1,5 @@
-import { NotFoundError, ValidationError } from '@/application/errors'
 import { IRepository } from '@/data/contracts'
+import { NotFoundError, ValidationError } from '@/data/errors'
 import { ItemsExchangeService } from '@/data/services/item'
 import { ItemEnumTypes, ItemModel, UserModel } from '@/domain/models'
 import {
@@ -60,17 +60,23 @@ describe('Items Exchange Service', () => {
     itemRepo = mock()
     dealerFound = generateUser(dealerId, false)
     clientFound = generateUser(clientId, false)
-    itemRepo.findById.mockResolvedValueOnce(dealerItem)
-    itemRepo.findById.mockResolvedValueOnce(clientItem)
-    userRepo.findById.mockResolvedValue(dealerFound)
-    userRepo.findById.mockResolvedValue(clientFound)
   })
 
   beforeEach(() => {
+    jest.resetAllMocks()
     sut = new ItemsExchangeService(userRepo, itemRepo)
   })
 
+  afterEach(() => {
+    jest.resetAllMocks()
+  })
+
   it('should call itemRepo.findById with correct params', async () => {
+    itemRepo.findById.mockResolvedValueOnce(dealerItem)
+    itemRepo.findById.mockResolvedValueOnce(clientItem)
+    userRepo.findById.mockResolvedValueOnce(dealerFound)
+    userRepo.findById.mockResolvedValueOnce(clientFound)
+
     await sut.handle(itemsExchangeDTO)
 
     expect(itemRepo.findById).toHaveBeenCalledWith(
@@ -85,6 +91,8 @@ describe('Items Exchange Service', () => {
   it('should throw not_found error if one of the items was not found', async () => {
     itemRepo.findById.mockResolvedValueOnce(dealerItem)
     itemRepo.findById.mockResolvedValueOnce(null)
+    userRepo.findById.mockResolvedValueOnce(dealerFound)
+    userRepo.findById.mockResolvedValueOnce(clientFound)
 
     const promise = sut.handle(itemsExchangeDTO)
 
@@ -92,35 +100,40 @@ describe('Items Exchange Service', () => {
   })
 
   it('should throw invalid_item if a dealer item does not belong to the dealer', async () => {
+    const newDealerItem = {
+      id: faker.datatype.uuid(),
+      name: faker.helpers.arrayElement([
+        ItemEnumTypes.water,
+        ItemEnumTypes.medicine,
+        ItemEnumTypes.food,
+        ItemEnumTypes.ammunition,
+      ]),
+      points: 4,
+      userId: faker.datatype.uuid(),
+    }
+
+    const newClientItem = {
+      id: faker.datatype.uuid(),
+      name: faker.helpers.arrayElement([
+        ItemEnumTypes.water,
+        ItemEnumTypes.medicine,
+        ItemEnumTypes.food,
+        ItemEnumTypes.ammunition,
+      ]),
+      points: 4,
+      userId: clientId,
+    }
+
+    itemRepo.findById.mockResolvedValueOnce(newDealerItem)
+    itemRepo.findById.mockResolvedValueOnce(newClientItem)
+    userRepo.findById.mockResolvedValueOnce(dealerFound)
+    userRepo.findById.mockResolvedValueOnce(clientFound)
+
     const newItemsExchangeDTO = {
       dealerId,
-      dealerItems: [
-        {
-          id: faker.datatype.uuid(),
-          name: faker.helpers.arrayElement([
-            ItemEnumTypes.water,
-            ItemEnumTypes.medicine,
-            ItemEnumTypes.food,
-            ItemEnumTypes.ammunition,
-          ]),
-          points: 4,
-          userId: faker.datatype.uuid(),
-        },
-      ],
+      dealerItems: [newDealerItem],
       clientId,
-      clientItems: [
-        {
-          id: faker.datatype.uuid(),
-          name: faker.helpers.arrayElement([
-            ItemEnumTypes.water,
-            ItemEnumTypes.medicine,
-            ItemEnumTypes.food,
-            ItemEnumTypes.ammunition,
-          ]),
-          points: 4,
-          userId: clientId,
-        },
-      ],
+      clientItems: [newClientItem],
     }
 
     const promise = sut.handle(newItemsExchangeDTO)
@@ -129,35 +142,40 @@ describe('Items Exchange Service', () => {
   })
 
   it('should throw invalid_item if a client item does not belong to the client', async () => {
+    const newDealerItem = {
+      id: faker.datatype.uuid(),
+      name: faker.helpers.arrayElement([
+        ItemEnumTypes.water,
+        ItemEnumTypes.medicine,
+        ItemEnumTypes.food,
+        ItemEnumTypes.ammunition,
+      ]),
+      points: 4,
+      userId: dealerId,
+    }
+
+    const newClientItem = {
+      id: faker.datatype.uuid(),
+      name: faker.helpers.arrayElement([
+        ItemEnumTypes.water,
+        ItemEnumTypes.medicine,
+        ItemEnumTypes.food,
+        ItemEnumTypes.ammunition,
+      ]),
+      points: 4,
+      userId: faker.datatype.uuid(),
+    }
+
+    itemRepo.findById.mockResolvedValueOnce(newDealerItem)
+    itemRepo.findById.mockResolvedValueOnce(newClientItem)
+    userRepo.findById.mockResolvedValueOnce(dealerFound)
+    userRepo.findById.mockResolvedValueOnce(clientFound)
+
     const newItemsExchangeDTO = {
       dealerId,
-      dealerItems: [
-        {
-          id: faker.datatype.uuid(),
-          name: faker.helpers.arrayElement([
-            ItemEnumTypes.water,
-            ItemEnumTypes.medicine,
-            ItemEnumTypes.food,
-            ItemEnumTypes.ammunition,
-          ]),
-          points: 4,
-          userId: dealerId,
-        },
-      ],
+      dealerItems: [newDealerItem],
       clientId,
-      clientItems: [
-        {
-          id: faker.datatype.uuid(),
-          name: faker.helpers.arrayElement([
-            ItemEnumTypes.water,
-            ItemEnumTypes.medicine,
-            ItemEnumTypes.food,
-            ItemEnumTypes.ammunition,
-          ]),
-          points: 4,
-          userId: faker.datatype.uuid(),
-        },
-      ],
+      clientItems: [newClientItem],
     }
 
     const promise = sut.handle(newItemsExchangeDTO)
@@ -166,6 +184,11 @@ describe('Items Exchange Service', () => {
   })
 
   it('should call UserRepo.findById for each user passing correct params', async () => {
+    itemRepo.findById.mockResolvedValueOnce(dealerItem)
+    itemRepo.findById.mockResolvedValueOnce(clientItem)
+    userRepo.findById.mockResolvedValueOnce(dealerFound)
+    userRepo.findById.mockResolvedValueOnce(clientFound)
+
     await sut.handle(itemsExchangeDTO)
 
     expect(userRepo.findById).toHaveBeenCalledWith(dealerId)
@@ -174,6 +197,8 @@ describe('Items Exchange Service', () => {
   })
 
   it('should throw not_found error if dealer user was not found', async () => {
+    itemRepo.findById.mockResolvedValueOnce(dealerItem)
+    itemRepo.findById.mockResolvedValueOnce(clientItem)
     userRepo.findById.mockResolvedValueOnce(null)
     userRepo.findById.mockResolvedValueOnce(clientFound)
 
@@ -183,6 +208,8 @@ describe('Items Exchange Service', () => {
   })
 
   it('should throw not_found error if client user was not found', async () => {
+    itemRepo.findById.mockResolvedValueOnce(dealerItem)
+    itemRepo.findById.mockResolvedValueOnce(clientItem)
     userRepo.findById.mockResolvedValueOnce(dealerFound)
     userRepo.findById.mockResolvedValueOnce(null)
 
@@ -195,6 +222,8 @@ describe('Items Exchange Service', () => {
     const newDealerFound = generateUser(dealerId, true)
     const newClientFound = generateUser(clientId, false)
 
+    itemRepo.findById.mockResolvedValueOnce(dealerItem)
+    itemRepo.findById.mockResolvedValueOnce(clientItem)
     userRepo.findById.mockResolvedValueOnce(newDealerFound)
     userRepo.findById.mockResolvedValueOnce(newClientFound)
 
@@ -207,6 +236,8 @@ describe('Items Exchange Service', () => {
     const newDealerFound = generateUser(dealerId, false)
     const newClientFound = generateUser(clientId, true)
 
+    itemRepo.findById.mockResolvedValueOnce(dealerItem)
+    itemRepo.findById.mockResolvedValueOnce(clientItem)
     userRepo.findById.mockResolvedValueOnce(newDealerFound)
     userRepo.findById.mockResolvedValueOnce(newClientFound)
 
@@ -216,26 +247,41 @@ describe('Items Exchange Service', () => {
   })
 
   it('should throw invalid_exchange error if client and dealer items dont represent equality of points', async () => {
+    const newDealerItem = {
+      id: faker.datatype.uuid(),
+      name: faker.helpers.arrayElement([
+        ItemEnumTypes.water,
+        ItemEnumTypes.medicine,
+        ItemEnumTypes.food,
+        ItemEnumTypes.ammunition,
+      ]),
+      points: 4,
+      userId: dealerId,
+    }
+
+    const newClientItem = {
+      id: faker.datatype.uuid(),
+      name: faker.helpers.arrayElement([
+        ItemEnumTypes.water,
+        ItemEnumTypes.medicine,
+        ItemEnumTypes.food,
+        ItemEnumTypes.ammunition,
+      ]),
+      points: 3,
+      userId: clientId,
+    }
+
     const newItemsExchangeDTO = {
       dealerId,
-      dealerItems: [
-        {
-          id: faker.datatype.uuid(),
-          name: ItemEnumTypes.water,
-          points: 4,
-          userId: dealerId,
-        },
-      ],
+      dealerItems: [newDealerItem],
       clientId,
-      clientItems: [
-        {
-          id: faker.datatype.uuid(),
-          name: ItemEnumTypes.food,
-          points: 3,
-          userId: clientId,
-        },
-      ],
+      clientItems: [newClientItem],
     }
+
+    itemRepo.findById.mockResolvedValueOnce(newDealerItem)
+    itemRepo.findById.mockResolvedValueOnce(newClientItem)
+    userRepo.findById.mockResolvedValueOnce(dealerFound)
+    userRepo.findById.mockResolvedValueOnce(clientFound)
 
     const promise = sut.handle(newItemsExchangeDTO)
 
@@ -244,41 +290,42 @@ describe('Items Exchange Service', () => {
 
   it('should update all items userId field exchanging items between dealer and client', async () => {
     const dealerItemOneId = faker.datatype.uuid()
-    const dealerItemTwoId = faker.datatype.uuid()
     const clientItemOneId = faker.datatype.uuid()
     const clientItemTwoId = faker.datatype.uuid()
 
+    const newDealerItem = {
+      id: dealerItemOneId,
+      name: ItemEnumTypes.water,
+      points: 4,
+      userId: dealerId,
+    }
+
+    const newClientItemOne = {
+      id: clientItemOneId,
+      name: ItemEnumTypes.medicine,
+      points: 2,
+      userId: clientId,
+    }
+
+    const newClientItemTwo = {
+      id: clientItemTwoId,
+      name: ItemEnumTypes.medicine,
+      points: 2,
+      userId: clientId,
+    }
+
+    itemRepo.findById.mockResolvedValueOnce(newDealerItem)
+    itemRepo.findById.mockResolvedValueOnce(newClientItemOne)
+    itemRepo.findById.mockResolvedValueOnce(newClientItemTwo)
+
+    userRepo.findById.mockResolvedValueOnce(dealerFound)
+    userRepo.findById.mockResolvedValueOnce(clientFound)
+
     const newItemsExchangeDTO = {
       dealerId,
-      dealerItems: [
-        {
-          id: dealerItemOneId,
-          name: ItemEnumTypes.water,
-          points: 4,
-          userId: dealerId,
-        },
-        {
-          id: dealerItemTwoId,
-          name: ItemEnumTypes.ammunition,
-          points: 1,
-          userId: dealerId,
-        },
-      ],
+      dealerItems: [newDealerItem],
       clientId,
-      clientItems: [
-        {
-          id: clientItemOneId,
-          name: ItemEnumTypes.food,
-          points: 3,
-          userId: clientId,
-        },
-        {
-          id: clientItemTwoId,
-          name: ItemEnumTypes.medicine,
-          points: 2,
-          userId: clientId,
-        },
-      ],
+      clientItems: [newClientItemOne, newClientItemTwo],
     }
 
     await sut.handle(newItemsExchangeDTO)
@@ -291,15 +338,9 @@ describe('Items Exchange Service', () => {
         userId: clientId,
       },
       {
-        id: dealerItemTwoId,
-        name: ItemEnumTypes.ammunition,
-        points: 1,
-        userId: clientId,
-      },
-      {
         id: clientItemOneId,
-        name: ItemEnumTypes.food,
-        points: 3,
+        name: ItemEnumTypes.medicine,
+        points: 2,
         userId: dealerId,
       },
       {
@@ -322,10 +363,6 @@ describe('Items Exchange Service', () => {
       itemsToUpdate[2].id,
       itemsToUpdate[2]
     )
-    expect(itemRepo.findByIdAndUpdate).toHaveBeenCalledWith(
-      itemsToUpdate[3].id,
-      itemsToUpdate[3]
-    )
-    expect(itemRepo.findByIdAndUpdate).toHaveBeenCalledTimes(4)
+    expect(itemRepo.findByIdAndUpdate).toHaveBeenCalledTimes(3)
   })
 })

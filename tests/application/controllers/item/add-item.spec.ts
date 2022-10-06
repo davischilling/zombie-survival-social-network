@@ -1,6 +1,5 @@
 import { AddItemToUserController } from '@/application/controllers/item'
-import { ServerError } from '@/application/errors'
-import { serverError } from '@/application/helpers'
+import { ServerError } from '@/data/errors'
 import { ItemEnumTypes } from '@/domain/models'
 import {
   AddItemToUserDTOType,

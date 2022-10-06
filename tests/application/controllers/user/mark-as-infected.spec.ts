@@ -1,5 +1,5 @@
 import { MarkUserAsInfectedController } from '@/application/controllers/user'
-import { ServerError } from '@/application/errors'
+import { ServerError } from '@/data/errors'
 import {
   MarkUserAsInfectedDTOType,
   IMarkUserAsInfectedService,

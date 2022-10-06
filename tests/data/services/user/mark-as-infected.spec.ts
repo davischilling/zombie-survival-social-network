@@ -1,9 +1,5 @@
-import {
-  NotFoundError,
-  ServerError,
-  ValidationError,
-} from '@/application/errors'
 import { IRepository } from '@/data/contracts'
+import { NotFoundError, ServerError, ValidationError } from '@/data/errors'
 import { MarkUserAsInfectedService } from '@/data/services/user'
 import { UserModel } from '@/domain/models'
 import {

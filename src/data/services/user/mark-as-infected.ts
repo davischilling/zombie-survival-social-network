@@ -1,5 +1,5 @@
-import { NotFoundError, ValidationError } from '@/application/errors'
 import { IRepository } from '@/data/contracts'
+import { NotFoundError, ValidationError } from '@/data/errors'
 import { areThereToEqualIds } from '@/data/utils'
 import { UserModel } from '@/domain/models'
 import {

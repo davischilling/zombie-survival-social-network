@@ -1,6 +1,6 @@
-import { NotFoundError } from '@/application/errors'
 import { IIdGenerator, IRepository } from '@/data/contracts'
 import Item from '@/data/entities/Item'
+import { NotFoundError } from '@/data/errors'
 import { ItemModel, UserModel } from '@/domain/models'
 import {
   AddItemToUserUseCase,

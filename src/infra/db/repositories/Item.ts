@@ -1,6 +1,6 @@
-import { NotFoundError } from '@/application/errors'
 import { IRepository } from '@/data/contracts'
 import Item from '@/data/entities/Item'
+import { NotFoundError } from '@/data/errors'
 import { ItemModel, ItemTypes } from '@/domain/models'
 import { ItemSchema } from '@/infra/db/schemas/Item'
 

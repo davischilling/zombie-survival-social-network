@@ -1,5 +1,5 @@
 import { HttpResponse, Controller } from '@/application/controllers/Controller'
-import { NotFoundError, ServerError } from '@/application/errors'
+import { NotFoundError, ServerError } from '@/data/errors'
 
 class ControllerStub extends Controller {
   result: HttpResponse = {

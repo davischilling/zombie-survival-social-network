@@ -1,5 +1,5 @@
 import { RemoveItemFromUserController } from '@/application/controllers/item'
-import { ServerError } from '@/application/errors'
+import { ServerError } from '@/data/errors'
 import {
   IRemoveItemFromUserService,
   RemoveItemFromUserDTOType,

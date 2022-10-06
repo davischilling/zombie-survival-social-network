@@ -1,5 +1,5 @@
 import { ItemsExchangeController } from '@/application/controllers/item'
-import { ServerError } from '@/application/errors'
+import { ServerError } from '@/data/errors'
 import { ItemEnumTypes } from '@/domain/models'
 import {
   ItemsExchangeDTOType,
